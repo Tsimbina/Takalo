@@ -2,6 +2,7 @@
 
 use app\controllers\ApiExampleController;
 use app\controllers\ApiSalaireChauffeurControler;
+use app\controllers\AdminAuthController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -13,6 +14,12 @@ use app\controllers\ApiHomeController;
  * @var Router $router 
  * @var Engine $app
  */
+
+// Admin auth
+$router->get('/admin/login', [AdminAuthController::class, 'showLogin']);
+$router->post('/admin/login', [AdminAuthController::class, 'handleLogin']);
+$router->get('/admin/logout', [AdminAuthController::class, 'logout']);
+$router->get('/admin', [AdminAuthController::class, 'dashboard']);
 
 //$router->group('', function (Router $router) use ($app) {
 //
