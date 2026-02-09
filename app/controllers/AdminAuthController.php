@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Flight;
+use app\models\Admin;
 
 class AdminAuthController
 {
@@ -32,13 +33,19 @@ class AdminAuthController
         $email = trim((string)($_POST['email'] ?? ''));
         $password = (string)($_POST['password'] ?? '');
 
-        $defaultEmail = 'admin@takalo.local';
-        $defaultPassword = 'admin123';
+        try {
+            $adminModel = new Admin(Flight::db());
+            $admin = $adminModel->findByCredentials($email, $password);
 
-        if ($email === $defaultEmail && $password === $defaultPassword) {
-            $_SESSION['admin_authenticated'] = true;
-            $_SESSION['admin_email'] = $email;
-            Flight::redirect('/admin');
+            if ($admin !== null) {
+                $_SESSION['admin_authenticated'] = true;
+                $_SESSION['admin_email'] = (string)($admin['login'] ?? $email);
+                Flight::redirect('/admin');
+                return;
+            }
+        } catch (\Throwable $e) {
+            $_SESSION['admin_login_error'] = 'Erreur serveur lors de la connexion.';
+            Flight::redirect('/admin/login');
             return;
         }
 
