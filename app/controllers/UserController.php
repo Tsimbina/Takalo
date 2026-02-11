@@ -14,6 +14,47 @@ class UserController
         }
     }
 
+    public function showLogin(): void
+    {
+        $this->ensureSessionStarted();
+
+        $error = $_SESSION['user_login_error'] ?? null;
+        unset($_SESSION['user_login_error']);
+
+        Flight::render('loginUser', [
+            'error' => $error,
+        ]);
+    }
+
+    public function handleLogin(): void
+    {
+        $this->ensureSessionStarted();
+
+        $loginOrEmail = (string)($_POST['login'] ?? '');
+        $password = (string)($_POST['password'] ?? '');
+
+        try {
+            $userModel = new User(Flight::db());
+            $user = $userModel->verifyLogin($loginOrEmail, $password);
+
+            if ($user !== null) {
+                $_SESSION['user_authenticated'] = true;
+                $_SESSION['user_id'] = (int)($user['id'] ?? 0);
+                $_SESSION['user_login'] = (string)($user['login'] ?? '');
+                $_SESSION['user_email'] = (string)($user['email'] ?? '');
+
+                Flight::redirect('/');
+                return;
+            }
+
+            $_SESSION['user_login_error'] = 'Identifiants invalides.';
+            Flight::redirect('/login');
+        } catch (\Throwable $e) {
+            $_SESSION['user_login_error'] = 'Erreur serveur lors de la connexion.';
+            Flight::redirect('/login');
+        }
+    }
+
     public function showRegister(): void
     {
         $this->ensureSessionStarted();
@@ -22,7 +63,7 @@ class UserController
         $success = $_SESSION['user_register_success'] ?? null;
         unset($_SESSION['user_register_error'], $_SESSION['user_register_success']);
 
-        Flight::render('registerUser', [
+        Flight::render('inscripition', [
             'error' => $error,
             'success' => $success,
         ]);

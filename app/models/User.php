@@ -27,6 +27,20 @@ class User
         return $stmt->fetchColumn() !== false;
     }
 
+    public function verifyLogin(string $loginOrEmail, string $passwd): ?array
+    {
+        $loginOrEmail = trim($loginOrEmail);
+        if ($loginOrEmail === '' || $passwd === '') {
+            return null;
+        }
+
+        $stmt = $this->db->prepare('SELECT id, email, login FROM user WHERE (email = ? OR login = ?) AND passwd = ? LIMIT 1');
+        $stmt->execute([$loginOrEmail, $loginOrEmail, $passwd]);
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row !== false ? $row : null;
+    }
+
     public function register(string $email, string $login, string $passwd, string $passwdConfirm): array
     {
         $email = trim($email);
