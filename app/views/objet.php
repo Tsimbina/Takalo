@@ -45,7 +45,17 @@
                 <?php foreach ($objets as $objet) : ?>
                     <div class="col">
                         <div class="card objet-card h-100 shadow-sm position-relative">
-                            <img src="https://via.placeholder.com/600x400/f1f3f5/495057?text=Objet" class="card-img-top" alt="<?= htmlspecialchars((string)($objet['titre'] ?? 'Objet'), ENT_QUOTES, 'UTF-8') ?>">
+                            <?php if (!empty($objet['image'])) : ?>
+                                <img src="/<?= htmlspecialchars((string)$objet['image'], ENT_QUOTES, 'UTF-8') ?>" class="card-img-top" alt="<?= htmlspecialchars((string)($objet['titre'] ?? 'Objet'), ENT_QUOTES, 'UTF-8') ?>">
+                            <?php else : ?>
+                                <div class="card-img-top d-flex align-items-center justify-content-center bg-white border-bottom" style="height: 220px;">
+                                    <div class="text-center px-3">
+                                        <div class="fw-semibold">
+                                            <?= htmlspecialchars((string)($objet['titre'] ?? 'Objet'), ENT_QUOTES, 'UTF-8') ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <div class="card-body d-flex flex-column">
                                 <div class="dropdown objet-card-menu">
                                     <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">

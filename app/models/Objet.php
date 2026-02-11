@@ -16,7 +16,8 @@ class Objet
     public function getAllByUser(int $idUser): array
     {
         $stmt = $this->db->prepare(
-            'SELECT o.id, o.titre, o.prix, o.description, o.idProprio, o.idCateg, c.libele AS categorie
+            'SELECT o.id, o.titre, o.prix, o.description, o.idProprio, o.idCateg, c.libele AS categorie,
+                    (SELECT io.image FROM imageObjet io WHERE io.idObjet = o.id ORDER BY io.id ASC LIMIT 1) AS image
              FROM objet o
              JOIN categorie c ON c.id = o.idCateg
              WHERE o.idProprio = ?
