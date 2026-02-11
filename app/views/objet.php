@@ -12,7 +12,13 @@
     <div class="container py-4">
         <!-- Header avec menu -->
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-            <h1 class="h2 mb-0 fw-bold">Objets Disponibles</h1>
+            <div>
+                <h1 class="h2 mb-0 fw-bold">Vos objets</h1>
+                <div class="text-muted small">Gérez vos objets (ajouter, modifier, supprimer)</div>
+            </div>
+            <a class="btn btn-primary" href="#">
+                <i class="bi bi-plus-circle me-2"></i>Ajouter un objet
+            </a>
         </div>
 
         <!-- Grille de cards d'objets -->
@@ -27,8 +33,10 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
-                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                             </ul>
                         </div>
                         <h5 class="card-title">Vélo de ville</h5>
@@ -37,7 +45,10 @@
                             <span class="badge bg-primary">Transport</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                            <button class="btn btn-outline-danger" type="button"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,8 +63,10 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
-                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                             </ul>
                         </div>
                         <h5 class="card-title">Collection de livres</h5>
@@ -62,7 +75,10 @@
                             <span class="badge bg-primary">Livres</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                            <button class="btn btn-outline-danger" type="button"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,8 +93,10 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
-                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                             </ul>
                         </div>
                         <h5 class="card-title">Table basse en bois</h5>
@@ -87,7 +105,10 @@
                             <span class="badge bg-primary">Mobilier</span>
                             <span class="badge bg-warning text-dark">Réservé</span>
                         </div>
-                        <button class="btn btn-primary w-100" disabled><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                            <button class="btn btn-outline-danger" type="button"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,8 +123,10 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
-                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                             </ul>
                         </div>
                         <h5 class="card-title">Console de jeux</h5>
@@ -112,7 +135,10 @@
                             <span class="badge bg-primary">Électronique</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                            <button class="btn btn-outline-danger" type="button"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -127,8 +153,10 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
-                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                             </ul>
                         </div>
                         <h5 class="card-title">Vêtements d'hiver</h5>
@@ -137,7 +165,10 @@
                             <span class="badge bg-primary">Vêtements</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                            <button class="btn btn-outline-danger" type="button"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -152,8 +183,10 @@
                                 <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
-                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-trash3 me-2"></i>Supprimer</a></li>
                             </ul>
                         </div>
                         <h5 class="card-title">Boîte à outils complète</h5>
@@ -162,7 +195,10 @@
                             <span class="badge bg-primary">Outils</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
+                        <div class="d-grid gap-2">
+                            <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                            <button class="btn btn-outline-danger" type="button"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
+                        </div>
                     </div>
                 </div>
             </div>
