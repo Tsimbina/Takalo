@@ -7,6 +7,7 @@ use app\controllers\AdminAuthController;
 use app\controllers\CategorieController;
 use app\controllers\UserController;
 use app\controllers\ObjetController;
+use app\controllers\EchangeController;
 
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
@@ -57,6 +58,8 @@ $router->get('/propositions', [ObjetController::class, 'showMyProposals']);
 $router->post('/echange/@id/accepter', [ObjetController::class, 'accepterEchange']);
 $router->post('/echange/@id/refuser', [ObjetController::class, 'refuserEchange']);
 $router->post('/echange/@id/annuler', [ObjetController::class, 'annulerEchange']);
+// Echange (template)
+$router->get('/echange', [EchangeController::class, 'index']);
 
 
 //$router->group('', function (Router $router) use ($app) {
