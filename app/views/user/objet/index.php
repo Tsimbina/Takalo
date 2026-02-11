@@ -16,9 +16,11 @@
                 <h1 class="h2 mb-0 fw-bold">Vos objets</h1>
                 <div class="text-muted small">Gérez vos objets (ajouter, modifier, supprimer)</div>
             </div>
-            <a class="btn btn-primary" href="/user/objet/create">
+            <a class="btn btn-primary" href="/objet/create">
                 <i class="bi bi-plus-circle me-2"></i>Ajouter un objet
             </a>
+            <a href="/objet/explore">Explorer </a>
+
         </div>
 
         <?php if (!empty($success)) : ?>

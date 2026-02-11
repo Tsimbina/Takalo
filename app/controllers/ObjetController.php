@@ -45,7 +45,7 @@ class ObjetController
         $error = $_SESSION['objet_error'] ?? null;
         unset($_SESSION['objet_success'], $_SESSION['objet_error']);
 
-        Flight::render('user/objet/objet', [
+        Flight::render('user/objet/index', [
             'objets' => $objets,
             'success' => $success,
             'error' => $error,
@@ -243,5 +243,178 @@ class ObjetController
         }
 
         Flight::redirect('/objet');
+    }
+
+    public function explore(): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            $objets = $objetModel->getAllObjetExceptUser($idUser);
+        } catch (\Throwable $e) {
+            $objets = [];
+        }
+
+        Flight::render('user/objet/accueil', [
+            'objets' => $objets,
+        ]);
+    }
+
+    public function detail($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idObjet = (int)$id;
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            $stmt = Flight::db()->prepare(
+                'SELECT o.*, c.libele AS categorie 
+                 FROM objet o
+                 JOIN categorie c ON c.id = o.idCateg
+                 WHERE o.id = ? AND o.idProprio != ?'
+            );
+            $stmt->execute([$idObjet, $idUser]);
+            $objet = $stmt->fetch(\PDO::FETCH_ASSOC);
+            
+            if (!$objet) {
+                $_SESSION['objet_error'] = 'Objet non trouvé.';
+                Flight::redirect('/objet/accueil');
+                return;
+            }
+
+            $images = $objetModel->getImagesByObjet($idObjet);
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur lors du chargement de l\'objet.';
+            Flight::redirect('/objet/accueil');
+            return;
+        }
+
+        Flight::render('user/objet/detail', [
+            'objet' => $objet,
+            'images' => $images,
+        ]);
+    }
+
+    public function proposeExchange($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idObjetTarget = (int)$id;
+
+        try {
+            // Vérifier que l'objet cible existe et n'appartient pas à l'utilisateur
+            $stmt = Flight::db()->prepare('SELECT id FROM objet WHERE id = ? AND idProprio != ?');
+            $stmt->execute([$idObjetTarget, $idUser]);
+            if (!$stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $_SESSION['objet_error'] = 'Objet non trouvé.';
+                Flight::redirect('/objet/accueil');
+                return;
+            }
+
+            // Récupérer les objets de l'utilisateur
+            $objetModel = new Objet(Flight::db());
+            $myObjets = $objetModel->getAllByUser($idUser);
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur lors du chargement.';
+            Flight::redirect('/objet/accueil');
+            return;
+        }
+
+        Flight::render('user/objet/propose', [
+            'idObjetTarget' => $idObjetTarget,
+            'myObjets' => $myObjets,
+        ]);
+    }
+
+    public function handleProposal($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idObjetTarget = (int)$id;
+        $idObjetSelected = (int)($_POST['idObjet'] ?? 0);
+
+        if ($idObjetSelected <= 0) {
+            $_SESSION['objet_error'] = 'Veuillez sélectionner un objet.';
+            Flight::redirect("/objet/{$idObjetTarget}/propose");
+            return;
+        }
+
+        try {
+            // Vérifier que l'objet cible existe et n'appartient pas à l'utilisateur
+            $stmt = Flight::db()->prepare('SELECT idProprio FROM objet WHERE id = ?');
+            $stmt->execute([$idObjetTarget]);
+            $targetRow = $stmt->fetch(\PDO::FETCH_ASSOC);
+            
+            if (!$targetRow) {
+                $_SESSION['objet_error'] = 'Objet cible non trouvé.';
+                Flight::redirect('/objet/accueil');
+                return;
+            }
+
+            $idProprioTarget = (int)($targetRow['idProprio'] ?? 0);
+
+            // Vérifier que l'objet sélectionné appartient bien à l'utilisateur
+            $stmt = Flight::db()->prepare('SELECT id FROM objet WHERE id = ? AND idProprio = ?');
+            $stmt->execute([$idObjetSelected, $idUser]);
+            if (!$stmt->fetch(\PDO::FETCH_ASSOC)) {
+                $_SESSION['objet_error'] = 'Objet sélectionné invalide.';
+                Flight::redirect("/objet/{$idObjetTarget}/propose");
+                return;
+            }
+
+            // Créer la proposition d'échange
+            $insertStmt = Flight::db()->prepare(
+                'INSERT INTO echange (idObjet1, idObjet2, idProposeur, idDestinataire, idStatutEchange, dateEchange)
+                 VALUES (?, ?, ?, ?, ?, NOW())'
+            );
+            // idStatut 3 = "En cours"
+            $insertStmt->execute([$idObjetSelected, $idObjetTarget, $idUser, $idProprioTarget, 3]);
+
+            $_SESSION['objet_success'] = 'Proposition d\'échange envoyée avec succès !';
+            Flight::redirect('/objet/accueil');
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur lors de la création de la proposition.';
+            Flight::redirect("/objet/{$idObjetTarget}/propose");
+        }
+    }
+
+    public function showMyProposals(): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            // Récupère les propositions reçues (statut != "En cours")
+            $propositions = $objetModel->getPropositionsRecuesParUser($idUser);
+        } catch (\Throwable $e) {
+            $propositions = [];
+        }
+
+        $success = $_SESSION['objet_success'] ?? null;
+        $error = $_SESSION['objet_error'] ?? null;
+        unset($_SESSION['objet_success'], $_SESSION['objet_error']);
+
+        Flight::render('user/objet/choixDispoByUserForProposition', [
+            'propositions' => $propositions,
+            'success' => $success,
+            'error' => $error,
+        ]);
     }
 }

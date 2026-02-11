@@ -80,7 +80,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <form method="post" action="/user/login" autocomplete="off">
+                    <form method="post" action="/login" autocomplete="off">
                         <div class="mb-3">
                             <label for="login" class="form-label">Email ou login</label>
                             <div class="input-group">
