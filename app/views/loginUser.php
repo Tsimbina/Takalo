@@ -113,7 +113,7 @@
                             <span>ou</span>
                         </div>
 
-                        <a href="#" class="btn btn-outline-secondary w-100">
+                        <a href="/register" class="btn btn-outline-secondary w-100">
                             <i class="bi bi-person-plus me-2"></i>Créer un compte
                         </a>
                     </form>

@@ -120,7 +120,7 @@
                         </button>
 
                         <div class="text-center text-muted small mt-3">
-                            Déjà un compte ? <a href="#" class="text-decoration-none">Se connecter</a>
+                            Déjà un compte ? <a href="/login" class="text-decoration-none">Se connecter</a>
                         </div>
                     </form>
                 </div>
