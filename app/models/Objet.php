@@ -28,6 +28,21 @@ class Objet
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllObjetExceptUser(int $idUserToExcept): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT o.id, o.titre, o.prix, o.description, o.idProprio, o.idCateg, c.libele AS categorie,
+                    (SELECT io.image FROM imageObjet io WHERE io.idObjet = o.id ORDER BY io.id ASC LIMIT 1) AS image
+             FROM objet o
+             JOIN categorie c ON c.id = o.idCateg
+             WHERE o.idProprio != ?
+             ORDER BY o.id DESC'
+        );
+        $stmt->execute([$idUserToExcept]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getByIdAndUser(int $idObjet, int $idUser): ?array
     {
         $stmt = $this->db->prepare(
@@ -322,5 +337,55 @@ class Objet
             $this->db->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Récupère les propositions d'échange reçues par un utilisateur (statut != "En cours")
+     * @param int $idUser ID de l'utilisateur destinataire
+     * @return array Liste des propositions reçues avec tous les détails
+     */
+    public function getPropositionsRecuesParUser(int $idUser): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM vw_choixDispoByUserForProposition 
+             WHERE id_destinataire = ?
+             ORDER BY dateEchange DESC'
+        );
+        $stmt->execute([$idUser]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère les propositions d'échange reçues par un utilisateur avec un statut spécifique
+     * @param int $idUser ID de l'utilisateur destinataire
+     * @param int $idStatut ID du statut (1=Accepter, 2=Refuser)
+     * @return array Liste filtrée des propositions
+     */
+    public function getPropositionsRecuesParUserAvecStatut(int $idUser, int $idStatut): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM vw_choixDispoByUserForProposition 
+             WHERE id_destinataire = ? AND idStatutEchange = ?
+             ORDER BY dateEchange DESC'
+        );
+        $stmt->execute([$idUser, $idStatut]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère une proposition d'échange spécifique
+     * @param int $idEchange ID de l'échange
+     * @param int $idUser ID de l'utilisateur (pour vérifier qu'il est destinataire)
+     * @return array|null Détails de la proposition ou null
+     */
+    public function getPropositionDetail(int $idEchange, int $idUser): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM vw_choixDispoByUserForProposition 
+             WHERE idEchange = ? AND id_destinataire = ?'
+        );
+        $stmt->execute([$idEchange, $idUser]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
 }

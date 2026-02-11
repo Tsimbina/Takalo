@@ -47,6 +47,10 @@ $router->post('/objet/create', [ObjetController::class, 'handleCreate']);
 $router->get('/objet/@id/edit', [ObjetController::class, 'showEdit']);
 $router->post('/objet/@id/edit', [ObjetController::class, 'handleEdit']);
 $router->post('/objet/@id/delete', [ObjetController::class, 'handleDelete']);
+$router->get('/objet/explore', [ObjetController::class, 'explore']);
+$router->get('/objet/detail/@id', [ObjetController::class, 'detail']);
+$router->get('/objet/@id/propose', [ObjetController::class, 'proposeExchange']);
+$router->post('/objet/@id/propose', [ObjetController::class, 'handleProposal']);
 
 
 //$router->group('', function (Router $router) use ($app) {
