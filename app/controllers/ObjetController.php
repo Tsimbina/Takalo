@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use Flight;
+use app\models\Objet;
 
 class ObjetController
 {
@@ -22,6 +23,17 @@ class ObjetController
             return;
         }
 
-        Flight::render('objet');
+        $idUser = (int)($_SESSION['user_id'] ?? 0);
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            $objets = $objetModel->getAllByUser($idUser);
+        } catch (\Throwable $e) {
+            $objets = [];
+        }
+
+        Flight::render('objet', [
+            'objets' => $objets,
+        ]);
     }
 }
