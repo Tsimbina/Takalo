@@ -7,6 +7,7 @@ use app\controllers\AdminAuthController;
 use app\controllers\CategorieController;
 use app\controllers\UserController;
 use app\controllers\ObjetController;
+use app\controllers\EchangeController;
 
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
@@ -47,6 +48,9 @@ $router->post('/objet/create', [ObjetController::class, 'handleCreate']);
 $router->get('/objet/@id/edit', [ObjetController::class, 'showEdit']);
 $router->post('/objet/@id/edit', [ObjetController::class, 'handleEdit']);
 $router->post('/objet/@id/delete', [ObjetController::class, 'handleDelete']);
+
+// Echange (template)
+$router->get('/echange', [EchangeController::class, 'index']);
 
 
 //$router->group('', function (Router $router) use ($app) {
