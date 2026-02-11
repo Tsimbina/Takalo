@@ -118,4 +118,30 @@ class ObjetController
             Flight::redirect('/objet/create');
         }
     }
+
+    public function handleDelete($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idObjet = (int)$id;
+        $uploadDir = __DIR__ . '/../../public/data';
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            $ok = $objetModel->deleteByIdAndUser($idObjet, $idUser, $uploadDir);
+
+            if ($ok) {
+                $_SESSION['objet_success'] = 'Objet supprimé avec succès.';
+            } else {
+                $_SESSION['objet_error'] = 'Suppression impossible.';
+            }
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur serveur lors de la suppression.';
+        }
+
+        Flight::redirect('/objet');
+    }
 }

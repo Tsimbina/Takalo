@@ -132,4 +132,61 @@ class Objet
 
         return $normalized;
     }
+
+    public function deleteByIdAndUser(int $idObjet, int $idUser, string $uploadDirAbsolute): bool
+    {
+        if ($idObjet <= 0 || $idUser <= 0) {
+            return false;
+        }
+
+        $this->db->beginTransaction();
+
+        try {
+            $stmt = $this->db->prepare('SELECT idProprio FROM objet WHERE id = ?');
+            $stmt->execute([$idObjet]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (empty($row)) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            if ((int)($row['idProprio'] ?? 0) !== $idUser) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            $imgStmt = $this->db->prepare('SELECT image FROM imageObjet WHERE idObjet = ?');
+            $imgStmt->execute([$idObjet]);
+            $images = $imgStmt->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($images as $img) {
+                $path = (string)($img['image'] ?? '');
+                if ($path === '') {
+                    continue;
+                }
+
+                if (substr($path, 0, 5) === 'data/') {
+                    $abs = rtrim($uploadDirAbsolute, '/') . '/' . substr($path, strlen('data/'));
+                    if (is_file($abs)) {
+                        @unlink($abs);
+                    }
+                }
+            }
+
+            $del = $this->db->prepare('DELETE FROM objet WHERE id = ? AND idProprio = ?');
+            $del->execute([$idObjet, $idUser]);
+
+            if ($del->rowCount() < 1) {
+                $this->db->rollBack();
+                return false;
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
 }

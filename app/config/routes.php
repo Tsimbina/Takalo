@@ -44,6 +44,7 @@ $router->post('/login', [UserController::class, 'handleLogin']);
 $router->get('/objet', [ObjetController::class, 'index']);
 $router->get('/objet/create', [ObjetController::class, 'showCreate']);
 $router->post('/objet/create', [ObjetController::class, 'handleCreate']);
+$router->post('/objet/@id/delete', [ObjetController::class, 'handleDelete']);
 
 
 //$router->group('', function (Router $router) use ($app) {
