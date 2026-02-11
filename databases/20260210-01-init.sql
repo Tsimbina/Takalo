@@ -20,3 +20,13 @@ CREATE TABLE IF NOT EXISTS categorie (
     PRIMARY KEY (id),
     UNIQUE KEY uq_categorie_libele (libele)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS user (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    email VARCHAR(190) NOT NULL,
+    login VARCHAR(190) NOT NULL,
+    passwd VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_user_email (email),
+    UNIQUE KEY uq_user_login (login)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
