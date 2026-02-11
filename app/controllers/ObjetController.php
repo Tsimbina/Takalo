@@ -400,21 +400,141 @@ class ObjetController
         }
 
         try {
-            $objetModel = new Objet(Flight::db());
-            // Récupère les propositions reçues (statut != "En cours")
-            $propositions = $objetModel->getPropositionsRecuesParUser($idUser);
+            $echangeModel = new \app\models\Echange(Flight::db());
+            
+            // Récupère toutes les propositions (reçues et envoyées)
+            $allPropositions = $echangeModel->getEchangesByUser($idUser);
+            
+            // Séparer les propositions reçues et envoyées
+            $propositionsRecues = [];
+            $propositionsEnvoyees = [];
+            
+            foreach ($allPropositions as $prop) {
+                if ($prop['idDestinataire'] == $idUser) {
+                    $propositionsRecues[] = $prop;
+                } else {
+                    $propositionsEnvoyees[] = $prop;
+                }
+            }
+            
+            // Compter les propositions reçues en attente
+            $nbPropositionsRecues = count(array_filter($propositionsRecues, function($p) {
+                return $p['statut'] === 'En attente';
+            }));
+            
         } catch (\Throwable $e) {
-            $propositions = [];
+            $propositionsRecues = [];
+            $propositionsEnvoyees = [];
+            $nbPropositionsRecues = 0;
         }
 
         $success = $_SESSION['objet_success'] ?? null;
         $error = $_SESSION['objet_error'] ?? null;
         unset($_SESSION['objet_success'], $_SESSION['objet_error']);
 
-        Flight::render('user/objet/choixDispoByUserForProposition', [
-            'propositions' => $propositions,
+        Flight::render('objet/proposition', [
+            'propositionsRecues' => $propositionsRecues,
+            'propositionsEnvoyees' => $propositionsEnvoyees,
+            'nbPropositionsRecues' => $nbPropositionsRecues,
             'success' => $success,
             'error' => $error,
         ]);
+    }
+
+    public function accepterEchange($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idEchange = (int)$id;
+
+        try {
+            $echangeModel = new \app\models\Echange(Flight::db());
+            
+            // Vérifier que l'utilisateur est bien le destinataire de la proposition
+            if (!$echangeModel->estUtilisateurImplique($idEchange, $idUser)) {
+                $_SESSION['objet_error'] = 'Action non autorisée.';
+                Flight::redirect('/propositions');
+                return;
+            }
+            
+            // Accepter l'échange (statut 2 = Accepté)
+            if ($echangeModel->mettreAJourStatut($idEchange, 2)) {
+                $_SESSION['objet_success'] = 'Proposition d\'échange acceptée avec succès !';
+            } else {
+                $_SESSION['objet_error'] = 'Erreur lors de l\'acceptation de la proposition.';
+            }
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur serveur lors de l\'acceptation.';
+        }
+
+        Flight::redirect('/propositions');
+    }
+
+    public function refuserEchange($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idEchange = (int)$id;
+
+        try {
+            $echangeModel = new \app\models\Echange(Flight::db());
+            
+            // Vérifier que l'utilisateur est bien le destinataire de la proposition
+            if (!$echangeModel->estUtilisateurImplique($idEchange, $idUser)) {
+                $_SESSION['objet_error'] = 'Action non autorisée.';
+                Flight::redirect('/propositions');
+                return;
+            }
+            
+            // Refuser l'échange (statut 4 = Refusé)
+            if ($echangeModel->mettreAJourStatut($idEchange, 4)) {
+                $_SESSION['objet_success'] = 'Proposition d\'échange refusée.';
+            } else {
+                $_SESSION['objet_error'] = 'Erreur lors du refus de la proposition.';
+            }
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur serveur lors du refus.';
+        }
+
+        Flight::redirect('/propositions');
+    }
+
+    public function annulerEchange($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idEchange = (int)$id;
+
+        try {
+            $echangeModel = new \app\models\Echange(Flight::db());
+            
+            // Vérifier que l'utilisateur est bien le proposeur de la proposition
+            $echange = $echangeModel->getEchangeById($idEchange);
+            if (!$echange || $echange['idProposeur'] != $idUser) {
+                $_SESSION['objet_error'] = 'Action non autorisée.';
+                Flight::redirect('/propositions');
+                return;
+            }
+            
+            // Annuler l'échange (statut 5 = Annulé)
+            if ($echangeModel->mettreAJourStatut($idEchange, 5)) {
+                $_SESSION['objet_success'] = 'Proposition d\'échange annulée.';
+            } else {
+                $_SESSION['objet_error'] = 'Erreur lors de l\'annulation de la proposition.';
+            }
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur serveur lors de l\'annulation.';
+        }
+
+        Flight::redirect('/propositions');
     }
 }

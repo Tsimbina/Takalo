@@ -1,0 +1,161 @@
+/* Styles pour la page des propositions d'échange */
+
+.nav-tabs .nav-link {
+    color: #495057;
+    font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+    font-weight: 600;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+/* Styles pour les cartes de propositions */
+.proposition-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+}
+
+.proposition-card .card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.proposition-card .card-body {
+    padding: 1rem;
+}
+
+.proposition-card .card-footer {
+    background-color: transparent;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Styles pour les images des objets */
+.objet-image {
+    max-height: 150px;
+    width: auto;
+    object-fit: cover;
+    border-radius: 0.25rem;
+}
+
+/* Styles pour les badges de statut */
+.statut-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.statut-attente {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.statut-accepte {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.statut-refuse {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .proposition-card .row {
+        flex-direction: column;
+    }
+    
+    .proposition-card .col-md-6 {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animation pour les actions */
+.action-btn {
+    transition: all 0.3s ease;
+}
+
+.action-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Effet de fade pour les mises à jour de statut */
+.proposition-card {
+    transition: all 0.3s ease;
+}
+
+.proposition-card.updating {
+    opacity: 0.5;
+    transform: scale(0.98);
+}
+
+/* Styles pour les messages de succès/erreur */
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 400px;
+}
+
+.alert {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Amélioration des badges */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+}
+
+/* Style pour les images des objets */
+.objet-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+}
+
+.objet-image-container img {
+    transition: transform 0.3s ease;
+}
+
+.objet-image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Style pour les informations utilisateur */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-info i {
+    color: #6c757d;
+}

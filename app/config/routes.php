@@ -52,6 +52,12 @@ $router->get('/objet/detail/@id', [ObjetController::class, 'detail']);
 $router->get('/objet/@id/propose', [ObjetController::class, 'proposeExchange']);
 $router->post('/objet/@id/propose', [ObjetController::class, 'handleProposal']);
 
+// Routes pour la gestion des propositions d'échange
+$router->get('/propositions', [ObjetController::class, 'showMyProposals']);
+$router->post('/echange/@id/accepter', [ObjetController::class, 'accepterEchange']);
+$router->post('/echange/@id/refuser', [ObjetController::class, 'refuserEchange']);
+$router->post('/echange/@id/annuler', [ObjetController::class, 'annulerEchange']);
+
 
 //$router->group('', function (Router $router) use ($app) {
 //
