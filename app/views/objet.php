@@ -13,23 +13,24 @@
         <!-- Header avec menu -->
         <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
             <h1 class="h2 mb-0 fw-bold">Objets Disponibles</h1>
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#">Afficher les historiques d'appartenance</a></li>
-                </ul>
-            </div>
         </div>
 
         <!-- Grille de cards d'objets -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             <!-- Card 1 -->
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card objet-card h-100 shadow-sm position-relative">
                     <img src="https://via.placeholder.com/300x200/4A90E2/ffffff?text=Vélo" class="card-img-top" alt="Vélo">
                     <div class="card-body d-flex flex-column">
+                        <div class="dropdown objet-card-menu">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
+                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                            </ul>
+                        </div>
                         <h5 class="card-title">Vélo de ville</h5>
                         <p class="card-text text-muted flex-grow-1">Vélo en excellent état, parfait pour les trajets quotidiens en ville.</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -43,9 +44,18 @@
 
             <!-- Card 2 -->
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card objet-card h-100 shadow-sm position-relative">
                     <img src="https://via.placeholder.com/300x200/E74C3C/ffffff?text=Livre" class="card-img-top" alt="Livre">
                     <div class="card-body d-flex flex-column">
+                        <div class="dropdown objet-card-menu">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
+                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                            </ul>
+                        </div>
                         <h5 class="card-title">Collection de livres</h5>
                         <p class="card-text text-muted flex-grow-1">Romans classiques et contemporains, bien conservés.</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -59,9 +69,18 @@
 
             <!-- Card 3 -->
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card objet-card h-100 shadow-sm position-relative">
                     <img src="https://via.placeholder.com/300x200/27AE60/ffffff?text=Meuble" class="card-img-top" alt="Meuble">
                     <div class="card-body d-flex flex-column">
+                        <div class="dropdown objet-card-menu">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
+                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                            </ul>
+                        </div>
                         <h5 class="card-title">Table basse en bois</h5>
                         <p class="card-text text-muted flex-grow-1">Table basse artisanale en bois massif, design moderne.</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -75,9 +94,18 @@
 
             <!-- Card 4 -->
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card objet-card h-100 shadow-sm position-relative">
                     <img src="https://via.placeholder.com/300x200/F39C12/ffffff?text=Électronique" class="card-img-top" alt="Électronique">
                     <div class="card-body d-flex flex-column">
+                        <div class="dropdown objet-card-menu">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
+                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                            </ul>
+                        </div>
                         <h5 class="card-title">Console de jeux</h5>
                         <p class="card-text text-muted flex-grow-1">Console en bon état avec plusieurs jeux inclus.</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -91,9 +119,18 @@
 
             <!-- Card 5 -->
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card objet-card h-100 shadow-sm position-relative">
                     <img src="https://via.placeholder.com/300x200/9B59B6/ffffff?text=Vêtements" class="card-img-top" alt="Vêtements">
                     <div class="card-body d-flex flex-column">
+                        <div class="dropdown objet-card-menu">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
+                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                            </ul>
+                        </div>
                         <h5 class="card-title">Vêtements d'hiver</h5>
                         <p class="card-text text-muted flex-grow-1">Manteau, écharpe et gants, taille M, comme neufs.</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -107,9 +144,18 @@
 
             <!-- Card 6 -->
             <div class="col">
-                <div class="card h-100 shadow-sm">
+                <div class="card objet-card h-100 shadow-sm position-relative">
                     <img src="https://via.placeholder.com/300x200/1ABC9C/ffffff?text=Outils" class="card-img-top" alt="Outils">
                     <div class="card-body d-flex flex-column">
+                        <div class="dropdown objet-card-menu">
+                            <button class="btn btn-sm btn-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Voir détails</a></li>
+                                <li><a class="dropdown-item" href="#">Historique</a></li>
+                            </ul>
+                        </div>
                         <h5 class="card-title">Boîte à outils complète</h5>
                         <p class="card-text text-muted flex-grow-1">Ensemble d'outils pour bricolage et réparations diverses.</p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -123,6 +169,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
