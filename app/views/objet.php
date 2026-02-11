@@ -37,7 +37,7 @@
                             <span class="badge bg-primary">Transport</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100">Proposer un échange</button>
+                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                             <span class="badge bg-primary">Livres</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100">Proposer un échange</button>
+                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
                     </div>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                             <span class="badge bg-primary">Mobilier</span>
                             <span class="badge bg-warning text-dark">Réservé</span>
                         </div>
-                        <button class="btn btn-primary w-100" disabled>Proposer un échange</button>
+                        <button class="btn btn-primary w-100" disabled><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                             <span class="badge bg-primary">Électronique</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100">Proposer un échange</button>
+                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@
                             <span class="badge bg-primary">Vêtements</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100">Proposer un échange</button>
+                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
                             <span class="badge bg-primary">Outils</span>
                             <span class="badge bg-success">Disponible</span>
                         </div>
-                        <button class="btn btn-primary w-100">Proposer un échange</button>
+                        <button class="btn btn-primary w-100"><i class="bi bi-arrow-left-right me-2"></i>Proposer un échange</button>
                     </div>
                 </div>
             </div>

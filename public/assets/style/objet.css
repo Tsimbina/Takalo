@@ -42,6 +42,15 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
 }
 
+.objet-card-menu .btn i {
+    color: #6f42c1;
+}
+
+.objet-card-menu .btn:hover {
+    background: rgba(111, 66, 193, .10);
+    border-color: rgba(111, 66, 193, .22);
+}
+
 .objet-card .card-title {
     padding-right: 44px;
     margin-bottom: .35rem;
