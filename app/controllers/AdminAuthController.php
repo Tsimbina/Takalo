@@ -21,7 +21,7 @@ class AdminAuthController
         $error = $_SESSION['admin_login_error'] ?? null;
         unset($_SESSION['admin_login_error']);
 
-        Flight::render('loginAdmin', [
+        Flight::render('admin/loginAdmin', [
             'error' => $error,
         ]);
     }
@@ -72,7 +72,7 @@ class AdminAuthController
 
         $email = (string)($_SESSION['admin_email'] ?? 'admin');
 
-        Flight::render('adminDashboard', [
+        Flight::render('admin/adminDashboard', [
             'email' => $email,
         ]);
     }
