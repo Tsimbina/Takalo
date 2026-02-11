@@ -26,6 +26,10 @@ $router->get('/admin', [AdminAuthController::class, 'dashboard']);
 $router->get('/register', [UserController::class, 'showRegister']);
 $router->post('/register', [UserController::class, 'handleRegister']);
 
+// User login
+$router->get('/login', [UserController::class, 'showLogin']);
+$router->post('/login', [UserController::class, 'handleLogin']);
+
 //$router->group('', function (Router $router) use ($app) {
 //
 //	
