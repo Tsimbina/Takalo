@@ -119,6 +119,106 @@ class ObjetController
         }
     }
 
+    public function showEdit($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idObjet = (int)$id;
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            $objet = $objetModel->getByIdAndUser($idObjet, $idUser);
+            
+            if (!$objet) {
+                $_SESSION['objet_error'] = 'Objet non trouvé.';
+                Flight::redirect('/objet');
+                return;
+            }
+
+            $images = $objetModel->getImagesByObjet($idObjet);
+
+            $categModel = new Categorie(Flight::db());
+            $categories = $categModel->getAll();
+        } catch (\Throwable $e) {
+            $_SESSION['objet_error'] = 'Erreur lors du chargement de l\'objet.';
+            Flight::redirect('/objet');
+            return;
+        }
+
+        $error = $_SESSION['objet_edit_error'] ?? null;
+        $old = $_SESSION['objet_edit_old'] ?? $objet;
+        unset($_SESSION['objet_edit_error'], $_SESSION['objet_edit_old']);
+
+        Flight::render('user/objet/edit', [
+            'objet' => $old,
+            'images' => $images,
+            'categories' => $categories,
+            'error' => $error,
+        ]);
+    }
+
+    public function handleEdit($id): void
+    {
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $idObjet = (int)$id;
+        $titre = (string)($_POST['titre'] ?? '');
+        $prix = (string)($_POST['prix'] ?? '0');
+        $description = (string)($_POST['description'] ?? '');
+        $idCateg = (int)($_POST['idCateg'] ?? 0);
+
+        $_SESSION['objet_edit_old'] = [
+            'id' => $idObjet,
+            'titre' => $titre,
+            'prix' => $prix,
+            'description' => $description,
+            'idCateg' => $idCateg,
+        ];
+
+        $uploadDir = __DIR__ . '/../../public/data';
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            
+            // Vérifier que l'objet appartient bien à l'utilisateur
+            $existingObjet = $objetModel->getByIdAndUser($idObjet, $idUser);
+            if (!$existingObjet) {
+                $_SESSION['objet_error'] = 'Objet non trouvé.';
+                Flight::redirect('/objet');
+                return;
+            }
+
+            $ok = $objetModel->updateWithImages(
+                $idObjet,
+                $titre,
+                (float)$prix,
+                $description,
+                $idCateg,
+                $_FILES['images'] ?? null,
+                $uploadDir,
+                $_POST['delete_images'] ?? []
+            );
+
+            if ($ok) {
+                unset($_SESSION['objet_edit_old']);
+                $_SESSION['objet_success'] = 'Objet mis à jour avec succès.';
+                Flight::redirect('/objet');
+            } else {
+                $_SESSION['objet_edit_error'] = 'Mise à jour impossible. Vérifiez les champs et les images.';
+                Flight::redirect("/objet/{$idObjet}/edit");
+            }
+        } catch (\Throwable $e) {
+            $_SESSION['objet_edit_error'] = 'Erreur serveur lors de la mise à jour.';
+            Flight::redirect("/objet/{$idObjet}/edit");
+        }
+    }
+
     public function handleDelete($id): void
     {
         $idUser = $this->ensureUserAuthenticated();

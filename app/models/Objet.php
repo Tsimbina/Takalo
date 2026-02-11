@@ -28,6 +28,133 @@ class Objet
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getByIdAndUser(int $idObjet, int $idUser): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT o.*, c.libele AS categorie 
+             FROM objet o
+             JOIN categorie c ON c.id = o.idCateg
+             WHERE o.id = ? AND o.idProprio = ?'
+        );
+        $stmt->execute([$idObjet, $idUser]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
+    }
+
+    public function getImagesByObjet(int $idObjet): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id, image, alt FROM imageObjet WHERE idObjet = ? ORDER BY id ASC'
+        );
+        $stmt->execute([$idObjet]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateWithImages(
+        int $idObjet,
+        string $titre,
+        float $prix,
+        string $description,
+        int $idCateg,
+        ?array $imagesFile,
+        string $uploadDirAbsolute,
+        array $deleteImages = []
+    ): bool {
+        $titre = trim($titre);
+        $description = trim($description);
+
+        if ($titre === '' || $idObjet <= 0 || $idCateg <= 0) {
+            throw new \InvalidArgumentException('Champs invalides.');
+        }
+
+        $this->db->beginTransaction();
+
+        try {
+            // Mettre à jour l'objet
+            $stmt = $this->db->prepare(
+                'UPDATE objet SET titre = ?, prix = ?, description = ?, idCateg = ? WHERE id = ?'
+            );
+            $stmt->execute([$titre, $prix, $description, $idCateg, $idObjet]);
+
+            // Supprimer les images demandées
+            if (!empty($deleteImages)) {
+                foreach ($deleteImages as $imageId) {
+                    $imageId = (int)$imageId;
+                    if ($imageId > 0) {
+                        // Récupérer le chemin du fichier avant suppression
+                        $imgStmt = $this->db->prepare('SELECT image FROM imageObjet WHERE id = ? AND idObjet = ?');
+                        $imgStmt->execute([$imageId, $idObjet]);
+                        $imgRow = $imgStmt->fetch(PDO::FETCH_ASSOC);
+                        
+                        if ($imgRow) {
+                            $relativePath = (string)($imgRow['image'] ?? '');
+                            if (substr($relativePath, 0, 5) === 'data/') {
+                                $absPath = rtrim($uploadDirAbsolute, '/') . '/' . substr($relativePath, strlen('data/'));
+                                if (is_file($absPath)) {
+                                    @unlink($absPath);
+                                }
+                            }
+                        }
+                        
+                        // Supprimer de la base de données
+                        $delStmt = $this->db->prepare('DELETE FROM imageObjet WHERE id = ? AND idObjet = ?');
+                        $delStmt->execute([$imageId, $idObjet]);
+                    }
+                }
+            }
+
+            // Ajouter les nouvelles images
+            $images = $this->normalizeFilesArray($imagesFile);
+            if (!empty($images)) {
+                if (!is_dir($uploadDirAbsolute)) {
+                    if (!mkdir($uploadDirAbsolute, 0775, true) && !is_dir($uploadDirAbsolute)) {
+                        throw new \RuntimeException('Impossible de créer le dossier upload.');
+                    }
+                }
+
+                $insertImageStmt = $this->db->prepare(
+                    'INSERT INTO imageObjet (idObjet, image, alt) VALUES (?, ?, ?)'
+                );
+
+                foreach ($images as $img) {
+                    if (($img['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+                        continue;
+                    }
+
+                    $tmpName = (string)($img['tmp_name'] ?? '');
+                    $originalName = (string)($img['name'] ?? '');
+
+                    if ($tmpName === '' || !is_uploaded_file($tmpName)) {
+                        continue;
+                    }
+
+                    $ext = strtolower((string)pathinfo($originalName, PATHINFO_EXTENSION));
+                    $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+                    if (!in_array($ext, $allowed, true)) {
+                        continue;
+                    }
+
+                    $fileName = sprintf('objet_%d_%s.%s', $idObjet, bin2hex(random_bytes(8)), $ext);
+                    $destination = rtrim($uploadDirAbsolute, '/').'/'.$fileName;
+
+                    if (!move_uploaded_file($tmpName, $destination)) {
+                        continue;
+                    }
+
+                    $relativePath = 'data/'.$fileName;
+                    $alt = $titre;
+                    $insertImageStmt->execute([$idObjet, $relativePath, $alt]);
+                }
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
+    }
+
     public function deleteObjet($idObjet){
         $sql = "DELETE FROM objet WHERE id = ?";
         $stmt = $this->db->prepare($sql);

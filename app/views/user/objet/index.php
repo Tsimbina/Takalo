@@ -63,7 +63,7 @@
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" href="#"><i class="bi bi-eye me-2"></i>Voir</a></li>
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
+                                        <li><a class="dropdown-item" href="/objet/<?= (int)($objet['id'] ?? 0) ?>/edit"><i class="bi bi-pencil-square me-2"></i>Modifier</a></li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
                                             <form action="/objet/<?= (int)($objet['id'] ?? 0) ?>/delete" method="post" onsubmit="return confirm('Supprimer cet objet ?');">
@@ -87,7 +87,7 @@
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <a class="btn btn-outline-secondary" href="#"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
+                                    <a class="btn btn-outline-secondary" href="/objet/<?= (int)($objet['id'] ?? 0) ?>/edit"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
                                     <form action="/objet/<?= (int)($objet['id'] ?? 0) ?>/delete" method="post" onsubmit="return confirm('Supprimer cet objet ?');">
                                         <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash3 me-2"></i>Supprimer</button>
                                     </form>

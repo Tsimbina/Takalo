@@ -3,3 +3,6 @@ vendor/
 
 # Uploads
 public/data/
+
+#conf perso steeve
+.htaccess

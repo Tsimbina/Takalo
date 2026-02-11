@@ -44,6 +44,8 @@ $router->post('/login', [UserController::class, 'handleLogin']);
 $router->get('/objet', [ObjetController::class, 'index']);
 $router->get('/objet/create', [ObjetController::class, 'showCreate']);
 $router->post('/objet/create', [ObjetController::class, 'handleCreate']);
+$router->get('/objet/@id/edit', [ObjetController::class, 'showEdit']);
+$router->post('/objet/@id/edit', [ObjetController::class, 'handleEdit']);
 $router->post('/objet/@id/delete', [ObjetController::class, 'handleDelete']);
 
 
