@@ -3,6 +3,7 @@
 use app\controllers\ApiExampleController;
 use app\controllers\ApiSalaireChauffeurControler;
 use app\controllers\AdminAuthController;
+use app\controllers\UserController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -20,6 +21,10 @@ $router->get('/admin/login', [AdminAuthController::class, 'showLogin']);
 $router->post('/admin/login', [AdminAuthController::class, 'handleLogin']);
 $router->get('/admin/logout', [AdminAuthController::class, 'logout']);
 $router->get('/admin', [AdminAuthController::class, 'dashboard']);
+
+// User register
+$router->get('/register', [UserController::class, 'showRegister']);
+$router->post('/register', [UserController::class, 'handleRegister']);
 
 //$router->group('', function (Router $router) use ($app) {
 //
