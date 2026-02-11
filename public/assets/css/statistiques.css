@@ -1,0 +1,169 @@
+/* Styles pour la page de statistiques admin */
+
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* Cartes de statistiques principales */
+.stat-card {
+    border-radius: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+/* Icônes mini-stat */
+.mini-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animation des nombres */
+.stat-number {
+    background: linear-gradient(135deg, #212529 0%, #495057 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Progress bars */
+.progress {
+    border-radius: 3px;
+    background-color: #e9ecef;
+    overflow: hidden;
+}
+
+.progress-bar {
+    transition: width 1s ease-in-out;
+}
+
+/* Bouton refresh */
+#refreshBtn {
+    transition: all 0.3s ease;
+}
+
+#refreshBtn:hover {
+    transform: rotate(180deg);
+}
+
+#refreshBtn.spinning i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Cartes des graphiques */
+.card {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Animation d'entrée */
+.stat-card {
+    animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Délai d'animation pour chaque carte */
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+
+/* Hover effects sur les mini-stats */
+.mini-stat-icon {
+    transition: all 0.3s ease;
+}
+
+.col-md-4:hover .mini-stat-icon {
+    transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .display-5 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Charts canvas */
+canvas {
+    max-height: 300px;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    font-size: 0.875rem;
+}
+
+.breadcrumb-item a {
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+    color: #0d6efd;
+}
+
+/* Header gradient icon box */
+.bg-gradient {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+}
+
+/* Shadow improvements */
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+/* Texte muted plus doux */
+.text-muted {
+    color: #8a9199 !important;
+}
