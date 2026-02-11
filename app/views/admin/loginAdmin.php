@@ -65,7 +65,7 @@
                             <label for="email" class="form-label">Email</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="admin@takalo.local" required>
+                                <input type="email" class="form-control" id="email" name="email" value="admin@takalo.local" required>
                             </div>
                         </div>
 
@@ -73,7 +73,7 @@
                             <label for="password" class="form-label">Mot de passe</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-key"></i></span>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                                <input type="password" class="form-control" id="password" name="password" value="admin123" required>
                             </div>
                         </div>
 
