@@ -43,7 +43,7 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <h6 class="text-primary text-uppercase small fw-bold">Total Catégories</h6>
-                            <h3 class="mb-0 fw-bold" id="totalCount">3</h3>
+                            <h3 class="mb-0 fw-bold" id="totalCount"><?php echo count($categories ?? []); ?></h3>
                         </div>
                         <div class="bg-primary bg-opacity-25 p-3 rounded-circle">
                             <i class="bi bi-collection text-primary fs-4"></i>
@@ -114,16 +114,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr data-id="1">
-                            <td class="ps-4 fw-semibold text-primary">#001</td>
+                        <?php 
+                        $icons = ['cpu', 'tshirt', 'watch', 'phone', 'laptop', 'camera'];
+                        $colors = ['primary', 'success', 'warning', 'danger', 'info', 'secondary'];
+                        
+                        if (!empty($categories)):
+                            foreach ($categories as $index => $category):
+                                $icon = $icons[$index % count($icons)];
+                                $color = $colors[$index % count($colors)];
+                        ?>
+                        <tr data-id="<?php echo htmlspecialchars($category['id']); ?>">
+                            <td class="ps-4 fw-semibold text-primary">#<?php echo str_pad($category['id'], 3, '0', STR_PAD_LEFT); ?></td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                                        <i class="bi bi-cpu text-primary"></i>
+                                    <div class="bg-<?php echo $color; ?> bg-opacity-10 rounded-circle p-2 me-3">
+                                        <i class="bi bi-<?php echo $icon; ?> text-<?php echo $color; ?>"></i>
                                     </div>
                                     <div>
-                                        <span class="libele fw-medium">Électronique</span>
-                                        <small class="d-block text-muted">12 produits</small>
+                                        <span class="libele fw-medium"><?php echo htmlspecialchars($category['libele']); ?></span>
+                                        <small class="d-block text-muted">0 produits</small>
                                     </div>
                                 </div>
                             </td>
@@ -146,69 +155,16 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr data-id="2">
-                            <td class="ps-4 fw-semibold text-primary">#002</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
-                                        <i class="bi bi-tshirt text-success"></i>
-                                    </div>
-                                    <div>
-                                        <span class="libele fw-medium">Vêtements</span>
-                                        <small class="d-block text-muted">24 produits</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 status-badge">
-                                    <i class="bi bi-check-circle me-1"></i>Active
-                                </span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-outline-warning btn-edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <button class="btn btn-outline-info">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="btn btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
+                        <?php 
+                            endforeach;
+                        else:
+                        ?>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox"></i> Aucune catégorie trouvée
                             </td>
                         </tr>
-                        <tr data-id="3">
-                            <td class="ps-4 fw-semibold text-primary">#003</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-warning bg-opacity-10 rounded-circle p-2 me-3">
-                                        <i class="bi bi-watch text-warning"></i>
-                                    </div>
-                                    <div>
-                                        <span class="libele fw-medium">Accessoires</span>
-                                        <small class="d-block text-muted">8 produits</small>
-                                    </div>
-                                </td>
-                            <td>
-                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 status-badge">
-                                    <i class="bi bi-check-circle me-1"></i>Active
-                                </span>
-                            </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-outline-warning btn-edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <button class="btn btn-outline-info">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                    <button class="btn btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -218,7 +174,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="text-muted small">
                         <i class="bi bi-info-circle me-1"></i>
-                        <span id="totalText">3 catégories au total</span>
+                        <span id="totalText"><?php $count = count($categories ?? []); echo $count . ' catégorie' . ($count > 1 ? 's' : '') . ' au total'; ?></span>
                     </div>
                     <div class="d-flex gap-2">
                         <button class="btn btn-sm btn-outline-secondary">

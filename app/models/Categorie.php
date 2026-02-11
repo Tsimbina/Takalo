@@ -12,7 +12,7 @@ class Categorie{
     }
 
     public function updateCateg($id, $libelle){
-        $sql = "UPDATE categorie SET libelle = ? WHERE id = ?";
+        $sql = "UPDATE categorie SET libele = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$libelle, $id]);
     }
@@ -24,7 +24,7 @@ class Categorie{
     }
 
     public function insertCateg($libelle){
-        $sql = "INSERT INTO categorie(libelle) VALUES (?)";
+        $sql = "INSERT INTO categorie(libele) VALUES (?)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$libelle]);
     }
