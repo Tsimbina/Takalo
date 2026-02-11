@@ -28,6 +28,12 @@ class Objet
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function deleteObjet($idObjet){
+        $sql = "DELETE FROM objet WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$idObjet]);
+    }
+
     public function createWithImages(
         string $titre,
         float $prix,

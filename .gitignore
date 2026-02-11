@@ -1,6 +1,3 @@
-# Configuration sensible
-app/config/config.php
-
 # Dépendances
 vendor/
 
