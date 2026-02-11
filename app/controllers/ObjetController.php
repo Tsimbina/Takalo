@@ -45,7 +45,7 @@ class ObjetController
         $error = $_SESSION['objet_error'] ?? null;
         unset($_SESSION['objet_success'], $_SESSION['objet_error']);
 
-        Flight::render('objet', [
+        Flight::render('user/objet/objet', [
             'objets' => $objets,
             'success' => $success,
             'error' => $error,
@@ -70,7 +70,7 @@ class ObjetController
         $old = $_SESSION['objet_create_old'] ?? [];
         unset($_SESSION['objet_create_error'], $_SESSION['objet_create_old']);
 
-        Flight::render('objetCreate', [
+        Flight::render('user/objet/create', [
             'categories' => $categories,
             'error' => $error,
             'old' => $old,

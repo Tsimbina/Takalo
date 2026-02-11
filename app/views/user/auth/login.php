@@ -80,7 +80,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <form method="post" action="/login" autocomplete="off">
+                    <form method="post" action="/user/login" autocomplete="off">
                         <div class="mb-3">
                             <label for="login" class="form-label">Email ou login</label>
                             <div class="input-group">
@@ -99,10 +99,10 @@
 
                         <div class="d-flex align-items-center justify-content-between mt-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="1" id="remember">
-                                <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                                <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                                <label class="form-check-label small" for="remember">Se souvenir de moi</label>
                             </div>
-                            <a href="#" class="text-decoration-none small">Mot de passe oublié ?</a>
+                            <a href="/user/register" class="small text-decoration-none">Créer un compte</a>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100 py-2 mt-4">

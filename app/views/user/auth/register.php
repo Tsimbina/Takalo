@@ -115,12 +115,12 @@
                             </label>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100 py-2 mt-4">
-                            <i class="bi bi-check2-circle me-2"></i>S'inscrire
+                        <button type="submit" class="btn btn-primary w-100 py-2 mt-4">
+                            <i class="bi bi-person-plus me-2"></i>Créer un compte
                         </button>
 
                         <div class="text-center text-muted small mt-3">
-                            Déjà un compte ? <a href="/login" class="text-decoration-none">Se connecter</a>
+                            Déjà un compte ? <a href="/user/login" class="text-decoration-none">Se connecter</a>
                         </div>
                     </form>
                 </div>

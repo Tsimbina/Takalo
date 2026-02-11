@@ -21,7 +21,7 @@ class UserController
         $error = $_SESSION['user_login_error'] ?? null;
         unset($_SESSION['user_login_error']);
 
-        Flight::render('loginUser', [
+        Flight::render('user/auth/login', [
             'error' => $error,
         ]);
     }
@@ -63,7 +63,7 @@ class UserController
         $success = $_SESSION['user_register_success'] ?? null;
         unset($_SESSION['user_register_error'], $_SESSION['user_register_success']);
 
-        Flight::render('inscription', [
+        Flight::render('user/auth/register', [
             'error' => $error,
             'success' => $success,
         ]);
