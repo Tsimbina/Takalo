@@ -70,10 +70,7 @@ class AdminAuthController
             return;
         }
 
-        $email = (string)($_SESSION['admin_email'] ?? 'admin');
-
-        Flight::render('admin/adminDashboard', [
-            'email' => $email,
-        ]);
+        // Rediriger vers la page des catégories
+        Flight::redirect('/admin/categories');
     }
 }
