@@ -6,6 +6,7 @@ use app\controllers\AdminAuthController;
 
 use app\controllers\CategorieController;
 use app\controllers\UserController;
+use app\controllers\ObjetController;
 
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
@@ -38,6 +39,9 @@ $router->post('/register', [UserController::class, 'handleRegister']);
 // User login
 $router->get('/login', [UserController::class, 'showLogin']);
 $router->post('/login', [UserController::class, 'handleLogin']);
+
+// Objets
+$router->get('/objet', [ObjetController::class, 'index']);
 
 
 //$router->group('', function (Router $router) use ($app) {

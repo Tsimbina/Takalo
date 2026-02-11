@@ -43,7 +43,7 @@ class UserController
                 $_SESSION['user_login'] = (string)($user['login'] ?? '');
                 $_SESSION['user_email'] = (string)($user['email'] ?? '');
 
-                Flight::redirect('/');
+                Flight::redirect('/objet');
                 return;
             }
 
