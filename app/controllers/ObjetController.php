@@ -319,18 +319,28 @@ class ObjetController
         $idObjetTarget = (int)$id;
 
         try {
-            // Vérifier que l'objet cible existe et n'appartient pas à l'utilisateur
-            $stmt = Flight::db()->prepare('SELECT id FROM objet WHERE id = ? AND idProprio != ?');
+            $db = Flight::db();
+
+            // Récupérer l'objet cible avec ses infos complètes (catégorie + propriétaire)
+            $stmt = $db->prepare(
+                'SELECT o.*, c.libele AS categorie, u.nom AS nomUser
+                 FROM objet o
+                 JOIN categorie c ON c.id = o.idCateg
+                 JOIN user u ON u.id = o.idProprio
+                 WHERE o.id = ? AND o.idProprio != ?'
+            );
             $stmt->execute([$idObjetTarget, $idUser]);
-            if (!$stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $objetTarget = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (!$objetTarget) {
                 $_SESSION['objet_error'] = 'Objet non trouvé.';
                 Flight::redirect('/objet/explore');
                 return;
             }
 
-            // Récupérer les objets disponibles de l'utilisateur (utilise la vue SQL)
-            $objetModel = new Objet(Flight::db());
-            $myObjets = $objetModel->getAllChoixDispoByUser($idUser);
+            // Récupérer les objets disponibles de l'utilisateur (pas en échange "En cours")
+            $objetModel = new Objet($db);
+            $myObjets = $objetModel->getAllChoixDispo($idUser);
         } catch (\Throwable $e) {
             $_SESSION['objet_error'] = 'Erreur lors du chargement.';
             Flight::redirect('/objet/explore');
@@ -339,6 +349,7 @@ class ObjetController
 
         Flight::render('user/objet/propose', [
             'idObjetTarget' => $idObjetTarget,
+            'objetTarget' => $objetTarget,
             'myObjets' => $myObjets,
         ]);
     }
@@ -360,38 +371,14 @@ class ObjetController
         }
 
         try {
-            // Vérifier que l'objet cible existe et n'appartient pas à l'utilisateur
-            $stmt = Flight::db()->prepare('SELECT idProprio FROM objet WHERE id = ?');
-            $stmt->execute([$idObjetTarget]);
-            $targetRow = $stmt->fetch(\PDO::FETCH_ASSOC);
-            
-            if (!$targetRow) {
-                $_SESSION['objet_error'] = 'Objet cible non trouvé.';
-                Flight::redirect('/objet/explore');
-                return;
-            }
-
-            $idProprioTarget = (int)($targetRow['idProprio'] ?? 0);
-
-            // Vérifier que l'objet sélectionné appartient bien à l'utilisateur
-            $stmt = Flight::db()->prepare('SELECT id FROM objet WHERE id = ? AND idProprio = ?');
-            $stmt->execute([$idObjetSelected, $idUser]);
-            if (!$stmt->fetch(\PDO::FETCH_ASSOC)) {
-                $_SESSION['objet_error'] = 'Objet sélectionné invalide.';
-                Flight::redirect('/objet/explore');
-                return;
-            }
-
-            // Créer la proposition d'échange
-            $insertStmt = Flight::db()->prepare(
-                'INSERT INTO echange (idObjet1, idObjet2, idProposeur, idDestinataire, idStatutEchange, dateEchange)
-                 VALUES (?, ?, ?, ?, ?, NOW())'
-            );
-            // idStatut 3 = "En cours"
-            $insertStmt->execute([$idObjetSelected, $idObjetTarget, $idUser, $idProprioTarget, 3]);
+            $objetModel = new Objet(Flight::db());
+            $objetModel->creerProposition($idObjetSelected, $idObjetTarget, $idUser);
 
             $_SESSION['objet_success'] = 'Proposition d\'échange envoyée avec succès !';
             Flight::redirect('/objet/explore');
+        } catch (\RuntimeException $e) {
+            $_SESSION['objet_error'] = $e->getMessage();
+            Flight::redirect("/objet/{$idObjetTarget}/propose");
         } catch (\Throwable $e) {
             $_SESSION['objet_error'] = 'Erreur lors de la création de la proposition.';
             Flight::redirect('/objet/explore');
@@ -417,10 +404,12 @@ class ObjetController
         $error = $_SESSION['objet_error'] ?? null;
         unset($_SESSION['objet_success'], $_SESSION['objet_error']);
 
-        Flight::render('user/objet/choixDispoByUserForProposition', [
+        // Utiliser la vue propose.php avec les propositions reçues
+        Flight::render('user/objet/propose', [
             'propositions' => $propositions,
             'success' => $success,
             'error' => $error,
+            'showPropositions' => true, // Flag pour indiquer qu'on affiche les propositions reçues
         ]);
     }
 }

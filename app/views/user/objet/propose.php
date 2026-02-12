@@ -151,12 +151,96 @@
     <a class="navbar-brand fw-bold text-primary" href="/"><i class="bi bi-box-seam"></i> Takalo</a>
     <div class="d-flex gap-2">
       <a href="/objet" class="btn btn-outline-primary btn-sm"><i class="bi bi-bag"></i> Mes Objets</a>
-      <a href="/objet/explore" class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> Explorer</a>
+      <a href="/objet/accueil" class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> Explorer</a>
+      <a href="/objet/propositions" class="btn btn-outline-success btn-sm"><i class="bi bi-inbox"></i> Propositions</a>
     </div>
   </div>
 </nav>
 
 <main class="container py-5">
+  <?php if (isset($showPropositions) && $showPropositions): ?>
+  <!-- Mode: Affichage des propositions reçues -->
+  <!-- Breadcrumb pour propositions -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/" class="text-decoration-none"><i class="bi bi-house-door"></i> Accueil</a></li>
+      <li class="breadcrumb-item"><a href="/objet" class="text-decoration-none">Mes Objets</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Propositions reçues</li>
+    </ol>
+  </nav>
+
+  <h1 class="section-title"><i class="bi bi-inbox"></i> Propositions d'échange reçues</h1>
+  <p class="text-muted mb-4">Voici les propositions d'échange que vous avez reçues (acceptées ou refusées).</p>
+
+  <?php if (!empty($success)): ?>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <?php echo htmlspecialchars($success); ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <?php endif; ?>
+
+  <?php if (!empty($error)): ?>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <?php echo htmlspecialchars($error); ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <?php endif; ?>
+
+  <?php if (!empty($propositions)): ?>
+  <div class="row g-4">
+    <?php foreach ($propositions as $proposition): ?>
+    <div class="col-12 col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <!-- Objet proposé (par l'autre utilisateur) -->
+            <div class="col-6">
+              <h6 class="text-muted">Objet proposé</h6>
+              <img src="/<?php echo htmlspecialchars($proposition['image_objetPropose'] ?? 'data/placeholder.jpg'); ?>" 
+                   class="img-thumbnail mb-2" style="height: 80px; width: 80px; object-fit: cover;">
+              <h6><?php echo htmlspecialchars($proposition['titre_objetPropose']); ?></h6>
+              <small class="text-muted"><?php echo number_format((float)$proposition['prix_objetPropose'], 0, ',', ' '); ?> Ar</small>
+              <p><small class="text-muted">Par: <?php echo htmlspecialchars($proposition['nom_proposeur']); ?></small></p>
+            </div>
+            
+            <!-- Flèche -->
+            <div class="col-12 col-sm-auto d-flex align-items-center justify-content-center">
+              <i class="bi bi-arrow-left-right text-success" style="font-size: 1.5rem;"></i>
+            </div>
+            
+            <!-- Objet convoité (votre objet) -->
+            <div class="col-6">
+              <h6 class="text-muted">Votre objet</h6>
+              <img src="/<?php echo htmlspecialchars($proposition['image_objetConvoite'] ?? 'data/placeholder.jpg'); ?>" 
+                   class="img-thumbnail mb-2" style="height: 80px; width: 80px; object-fit: cover;">
+              <h6><?php echo htmlspecialchars($proposition['titre_objetConvoite']); ?></h6>
+              <small class="text-muted"><?php echo number_format((float)$proposition['prix_objetConvoite'], 0, ',', ' '); ?> Ar</small>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="badge bg-<?php echo $proposition['idStatutEchange'] == 1 ? 'success' : 'danger'; ?>">
+              <?php echo htmlspecialchars($proposition['statusLibelle']); ?>
+            </span>
+            <small class="text-muted"><?php echo date('d/m/Y', strtotime($proposition['dateEchange'])); ?></small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+  <?php else: ?>
+  <div class="alert alert-info text-center py-5">
+    <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+    <h5 class="mt-3">Aucune proposition</h5>
+    <p class="text-muted">Vous n'avez encore reçu aucune proposition d'échange.</p>
+  </div>
+  <?php endif; ?>
+
+  <?php else: ?>
+  <!-- Mode: Formulaire de proposition d'échange (code original) -->
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
@@ -335,6 +419,7 @@
     </div>
     <?php endif; ?>
   </form>
+  <?php endif; ?> <!-- Fin du mode proposition d'échange -->
 </main>
 
 <footer class="text-center text-muted small py-4 mt-5 border-top">

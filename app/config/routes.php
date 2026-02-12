@@ -52,6 +52,7 @@ $router->get('/objet/explore', [ObjetController::class, 'explore']);
 $router->get('/objet/detail/@id', [ObjetController::class, 'detail']);
 $router->get('/objet/@id/propose', [ObjetController::class, 'proposeExchange']);
 $router->post('/objet/@id/propose', [ObjetController::class, 'handleProposal']);
+$router->get('/objet/propositions', [ObjetController::class, 'showMyProposals']);
 
 // Echange (template)
 $router->get('/echange', [EchangeController::class, 'index']);

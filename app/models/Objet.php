@@ -340,6 +340,75 @@ class Objet
     }
 
     /**
+     * Récupère les objets disponibles d'un utilisateur pour proposer un échange
+     * Utilise la vue SQL vw_choixDispoByUserForProposition qui exclut
+     * les objets déjà impliqués dans un échange "En cours" (statut 3)
+     * @param int $idUser ID de l'utilisateur connecté (proposeur)
+     * @return array Liste des objets disponibles
+     */
+    public function getAllChoixDispo(int $idUser): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM vw_choixDispoByUserForProposition 
+             WHERE idProprio = ?
+             ORDER BY id DESC'
+        );
+        $stmt->execute([$idUser]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Vérifie qu'un objet est disponible pour l'échange via la vue SQL
+     * @param int $idObjet ID de l'objet à vérifier
+     * @param int $idUser ID du propriétaire attendu
+     * @return bool true si l'objet est disponible
+     */
+    public function isObjetDisponible(int $idObjet, int $idUser): bool
+    {
+        $stmt = $this->db->prepare(
+            'SELECT id FROM vw_choixDispoByUserForProposition 
+             WHERE id = ? AND idProprio = ?'
+        );
+        $stmt->execute([$idObjet, $idUser]);
+        return (bool) $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Crée une proposition d'échange dans la base de données
+     * Vérifie via la vue SQL que l'objet sélectionné est bien disponible
+     * @param int $idObjetPropose ID de l'objet proposé par l'utilisateur
+     * @param int $idObjetCible ID de l'objet convoité
+     * @param int $idProposeur ID de l'utilisateur qui propose
+     * @return bool true si l'échange a été créé
+     * @throws \RuntimeException si l'objet n'est pas disponible ou si l'objet cible est introuvable
+     */
+    public function creerProposition(int $idObjetPropose, int $idObjetCible, int $idProposeur): bool
+    {
+        // Vérifier que l'objet proposé est disponible via la vue
+        if (!$this->isObjetDisponible($idObjetPropose, $idProposeur)) {
+            throw new \RuntimeException('Objet sélectionné non disponible ou déjà en échange.');
+        }
+
+        // Récupérer le propriétaire de l'objet cible
+        $stmt = $this->db->prepare('SELECT idProprio FROM objet WHERE id = ? AND idProprio != ?');
+        $stmt->execute([$idObjetCible, $idProposeur]);
+        $targetRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$targetRow) {
+            throw new \RuntimeException('Objet cible non trouvé.');
+        }
+
+        $idDestinataire = (int) $targetRow['idProprio'];
+
+        // Insérer l'échange (statut 3 = "En cours")
+        $insertStmt = $this->db->prepare(
+            'INSERT INTO echange (idObjet1, idObjet2, idProposeur, idDestinataire, idStatutEchange, dateEchange)
+             VALUES (?, ?, ?, ?, 3, NOW())'
+        );
+        return $insertStmt->execute([$idObjetPropose, $idObjetCible, $idProposeur, $idDestinataire]);
+    }
+
+    /**
      * Récupère les propositions d'échange reçues par un utilisateur (statut != "En cours")
      * @param int $idUser ID de l'utilisateur destinataire
      * @return array Liste des propositions reçues avec tous les détails
