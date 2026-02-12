@@ -388,4 +388,21 @@ class Objet
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ?: null;
     }
+
+    /**
+     * Récupère les objets disponibles d'un utilisateur pour proposer un échange
+     * (utilise la vue pour exclure les objets déjà en cours d'échange)
+     * @param int $idUser ID du propriétaire des objets
+     * @return array Liste des objets disponibles
+     */
+    public function getAllChoixDispoByUser(int $idUser): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM vw_choixDispoByUserForProposition 
+             WHERE idProprio = ?
+             ORDER BY id DESC'
+        );
+        $stmt->execute([$idUser]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

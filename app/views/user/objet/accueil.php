@@ -69,6 +69,20 @@
     <a href="/objet/create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Ajouter un objet</a>
   </div>
 
+  <?php if (!empty($success)): ?>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle"></i> <?php echo htmlspecialchars($success); ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <?php endif; ?>
+
+  <?php if (!empty($error)): ?>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle"></i> <?php echo htmlspecialchars($error); ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  <?php endif; ?>
+
   <?php if (!empty($objets)): ?>
   <div class="row g-4">
     <?php foreach ($objets as $index => $objet): ?>

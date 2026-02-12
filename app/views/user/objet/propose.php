@@ -151,7 +151,7 @@
     <a class="navbar-brand fw-bold text-primary" href="/"><i class="bi bi-box-seam"></i> Takalo</a>
     <div class="d-flex gap-2">
       <a href="/objet" class="btn btn-outline-primary btn-sm"><i class="bi bi-bag"></i> Mes Objets</a>
-      <a href="/objet/accueil" class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> Explorer</a>
+      <a href="/objet/explore" class="btn btn-outline-info btn-sm"><i class="bi bi-eye"></i> Explorer</a>
     </div>
   </div>
 </nav>
@@ -161,7 +161,7 @@
   <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/" class="text-decoration-none"><i class="bi bi-house-door"></i> Accueil</a></li>
-      <li class="breadcrumb-item"><a href="/objet/accueil" class="text-decoration-none">Explorer</a></li>
+      <li class="breadcrumb-item"><a href="/objet/explore" class="text-decoration-none">Explorer</a></li>
       <li class="breadcrumb-item active" aria-current="page">Proposer un Échange</li>
     </ol>
   </nav>
@@ -317,7 +317,7 @@
           <button type="submit" class="btn btn-success btn-lg" id="submitBtn" disabled>
             <i class="bi bi-check-circle me-2"></i>Confirmer la proposition d'échange
           </button>
-          <a href="/objet/accueil" class="btn btn-outline-secondary">
+          <a href="/objet/explore" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-2"></i>Annuler
           </a>
         </div>

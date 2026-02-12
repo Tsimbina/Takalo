@@ -259,8 +259,14 @@ class ObjetController
             $objets = [];
         }
 
+        $success = $_SESSION['objet_success'] ?? null;
+        $error = $_SESSION['objet_error'] ?? null;
+        unset($_SESSION['objet_success'], $_SESSION['objet_error']);
+
         Flight::render('user/objet/accueil', [
             'objets' => $objets,
+            'success' => $success,
+            'error' => $error,
         ]);
     }
 
@@ -286,14 +292,14 @@ class ObjetController
             
             if (!$objet) {
                 $_SESSION['objet_error'] = 'Objet non trouvé.';
-                Flight::redirect('/objet/accueil');
+                Flight::redirect('/objet/explore');
                 return;
             }
 
             $images = $objetModel->getImagesByObjet($idObjet);
         } catch (\Throwable $e) {
             $_SESSION['objet_error'] = 'Erreur lors du chargement de l\'objet.';
-            Flight::redirect('/objet/accueil');
+            Flight::redirect('/objet/explore');
             return;
         }
 
@@ -318,16 +324,16 @@ class ObjetController
             $stmt->execute([$idObjetTarget, $idUser]);
             if (!$stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $_SESSION['objet_error'] = 'Objet non trouvé.';
-                Flight::redirect('/objet/accueil');
+                Flight::redirect('/objet/explore');
                 return;
             }
 
-            // Récupérer les objets de l'utilisateur
+            // Récupérer les objets disponibles de l'utilisateur (utilise la vue SQL)
             $objetModel = new Objet(Flight::db());
-            $myObjets = $objetModel->getAllByUser($idUser);
+            $myObjets = $objetModel->getAllChoixDispoByUser($idUser);
         } catch (\Throwable $e) {
             $_SESSION['objet_error'] = 'Erreur lors du chargement.';
-            Flight::redirect('/objet/accueil');
+            Flight::redirect('/objet/explore');
             return;
         }
 
@@ -349,7 +355,7 @@ class ObjetController
 
         if ($idObjetSelected <= 0) {
             $_SESSION['objet_error'] = 'Veuillez sélectionner un objet.';
-            Flight::redirect("/objet/{$idObjetTarget}/propose");
+            Flight::redirect('/objet/explore');
             return;
         }
 
@@ -361,7 +367,7 @@ class ObjetController
             
             if (!$targetRow) {
                 $_SESSION['objet_error'] = 'Objet cible non trouvé.';
-                Flight::redirect('/objet/accueil');
+                Flight::redirect('/objet/explore');
                 return;
             }
 
@@ -372,7 +378,7 @@ class ObjetController
             $stmt->execute([$idObjetSelected, $idUser]);
             if (!$stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $_SESSION['objet_error'] = 'Objet sélectionné invalide.';
-                Flight::redirect("/objet/{$idObjetTarget}/propose");
+                Flight::redirect('/objet/explore');
                 return;
             }
 
@@ -385,10 +391,10 @@ class ObjetController
             $insertStmt->execute([$idObjetSelected, $idObjetTarget, $idUser, $idProprioTarget, 3]);
 
             $_SESSION['objet_success'] = 'Proposition d\'échange envoyée avec succès !';
-            Flight::redirect('/objet/accueil');
+            Flight::redirect('/objet/explore');
         } catch (\Throwable $e) {
             $_SESSION['objet_error'] = 'Erreur lors de la création de la proposition.';
-            Flight::redirect("/objet/{$idObjetTarget}/propose");
+            Flight::redirect('/objet/explore');
         }
     }
 
