@@ -65,6 +65,35 @@ class Objet
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findByKeyword(string $keyword): array
+    {
+        $search = '%' . trim($keyword) . '%';
+        $stmt = $this->db->prepare(
+            'SELECT o.id, o.titre, o.prix, o.description, o.idProprio, o.idCateg, c.libele AS categorie,
+                    (SELECT io.image FROM imageObjet io WHERE io.idObjet = o.id ORDER BY io.id ASC LIMIT 1) AS image
+             FROM objet o
+             JOIN categorie c ON c.id = o.idCateg
+             WHERE o.titre LIKE ? OR o.description LIKE ?
+             ORDER BY o.id DESC'
+        );
+        $stmt->execute([$search, $search]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function findByCategorie(int $idCateg): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT o.id, o.titre, o.prix, o.description, o.idProprio, o.idCateg, c.libele AS categorie,
+                    (SELECT io.image FROM imageObjet io WHERE io.idObjet = o.id ORDER BY io.id ASC LIMIT 1) AS image
+             FROM objet o
+             JOIN categorie c ON c.id = o.idCateg
+             WHERE o.idCateg = ?
+             ORDER BY o.id DESC'
+        );
+        $stmt->execute([$idCateg]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function updateWithImages(
         int $idObjet,
         string $titre,
