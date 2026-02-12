@@ -58,6 +58,7 @@
     <a class="navbar-brand fw-bold text-primary" href="/"><i class="bi bi-box-seam"></i> Takalo</a>
     <div class="d-flex gap-2">
       <a href="/objet" class="btn btn-outline-primary btn-sm"><i class="bi bi-bag"></i> Mes Objets</a>
+      <a href="/objet/propositions" class="btn btn-outline-success btn-sm"><i class="bi bi-inbox"></i> Propositions</a>
       <a href="/logout" class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
     </div>
   </div>
