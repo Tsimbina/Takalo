@@ -75,4 +75,100 @@ class User
 
         return ['success' => true, 'user_id' => (int)$this->db->lastInsertId()];
     }
+
+    public function getAllHistoriqueObjet(int $idObjet): array
+    {
+        if ($idObjet <= 0) {
+            return [];
+        }
+
+        $currentOwnerStmt = $this->db->prepare('SELECT idProprio FROM objet WHERE id = ?');
+        $currentOwnerStmt->execute([$idObjet]);
+        $currentOwnerId = (int)($currentOwnerStmt->fetchColumn() ?: 0);
+
+        $stmt = $this->db->prepare(
+            'SELECT owner_id, MIN(dt) AS first_dt
+             FROM (
+                 SELECT
+                     CASE
+                         WHEN e.idObjet1 = ? THEN e.idProposeur
+                         WHEN e.idObjet2 = ? THEN e.idDestinataire
+                     END AS owner_id,
+                     e.dateEchange AS dt
+                 FROM echange e
+                 WHERE e.idStatutEchange = 1 AND (e.idObjet1 = ? OR e.idObjet2 = ?)
+
+                 UNION ALL
+
+                 SELECT
+                     CASE
+                         WHEN e.idObjet1 = ? THEN e.idDestinataire
+                         WHEN e.idObjet2 = ? THEN e.idProposeur
+                     END AS owner_id,
+                     e.dateEchange AS dt
+                 FROM echange e
+                 WHERE e.idStatutEchange = 1 AND (e.idObjet1 = ? OR e.idObjet2 = ?)
+             ) t
+             WHERE owner_id IS NOT NULL
+             GROUP BY owner_id
+             ORDER BY first_dt ASC'
+        );
+
+        $stmt->execute([
+            $idObjet, $idObjet, $idObjet, $idObjet,
+            $idObjet, $idObjet, $idObjet, $idObjet,
+        ]);
+
+        $owners = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $ownerRows = [];
+        foreach ($owners as $r) {
+            $oid = (int)($r['owner_id'] ?? 0);
+            if ($oid <= 0) {
+                continue;
+            }
+            $ownerRows[] = [
+                'owner_id' => $oid,
+                'date' => $r['first_dt'] ?? null,
+            ];
+        }
+
+        $ownerIds = array_map(static fn($r) => (int)$r['owner_id'], $ownerRows);
+
+        if ($currentOwnerId > 0 && !in_array($currentOwnerId, $ownerIds, true)) {
+            $ownerRows[] = [
+                'owner_id' => $currentOwnerId,
+                'date' => null,
+            ];
+            $ownerIds[] = $currentOwnerId;
+        }
+
+        if (empty($ownerIds)) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ownerIds), '?'));
+        $userStmt = $this->db->prepare("SELECT id, login, email FROM user WHERE id IN ($placeholders)");
+        $userStmt->execute($ownerIds);
+        $users = $userStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $usersById = [];
+        foreach ($users as $u) {
+            $usersById[(int)($u['id'] ?? 0)] = $u;
+        }
+
+        $result = [];
+        foreach ($ownerRows as $row) {
+            $oid = (int)($row['owner_id'] ?? 0);
+            if ($oid <= 0 || empty($usersById[$oid])) {
+                continue;
+            }
+
+            $u = $usersById[$oid];
+            $u['date'] = $row['date'] ?? null;
+            $result[] = $u;
+        }
+
+        return $result;
+    }
 }

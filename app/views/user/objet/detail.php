@@ -43,6 +43,10 @@
 </head>
 <body>
 
+<?php
+    $historique = $historique ?? [];
+?>
+
 <div class="container py-5">
     <!-- Header -->
     <nav aria-label="breadcrumb" class="mb-4">
@@ -84,6 +88,34 @@
                 </div>
             </div>
             <?php endif; ?>
+
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold text-dark mb-3">
+                        <i class="bi bi-clock-history me-2"></i>Historique des propriétaires
+                    </h5>
+
+                    <?php if (empty($historique)) : ?>
+                        <div class="text-muted small">Aucun historique disponible.</div>
+                    <?php else : ?>
+                        <ol class="list-group list-group-numbered">
+                            <?php foreach ($historique as $h) : ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-semibold">
+                                            <?= htmlspecialchars((string)($h['login'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                        </div>
+                                        <div class="text-muted small">
+                                            <?= htmlspecialchars((string)($h['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                        </div>
+                                    </div>
+                                    <span class="badge text-bg-light rounded-pill">#<?= (int)($h['id'] ?? 0) ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ol>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
 
         <!-- Details Section -->
@@ -130,6 +162,7 @@
                             </p>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

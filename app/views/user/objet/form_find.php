@@ -61,6 +61,14 @@
 </head>
 <body>
 
+<?php
+    $categories = $categories ?? [];
+    $objets = $objets ?? [];
+    $filters = $filters ?? [];
+    $keyword = (string)($filters['keyword'] ?? '');
+    $category = (string)($filters['category'] ?? 'all');
+?>
+
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -87,28 +95,31 @@
                 <span class="pill"><i class="bi bi-lightning-charge"></i>Template</span>
             </div>
 
-            <form>
+            <form method="get" action="/objet/find">
                 <div class="row g-2">
                     <div class="col-12 col-md-6">
                         <label class="form-label">Mot-clé</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-type"></i></span>
-                            <input class="form-control" type="text" placeholder="Ex: iPhone, vélo, livre...">
+                            <input class="form-control" name="keyword" type="text" placeholder="Ex: iPhone, vélo, livre..." value="<?= htmlspecialchars($keyword, ENT_QUOTES, 'UTF-8') ?>">
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
                         <label class="form-label">Catégorie</label>
-                        <select class="form-select">
-                            <option value="">Toutes</option>
-                            <option>Électronique</option>
-                            <option>Vêtements</option>
-                            <option>Livres</option>
-                            <option>Maison</option>
-                            <option>Autres</option>
+                        <select class="form-select" name="category">
+                            <option value="all" <?= ($category === 'all' ? 'selected' : '') ?>>Toutes</option>
+                            <?php foreach ($categories as $c) : ?>
+                                <?php
+                                    $id = (int)($c['id'] ?? 0);
+                                    $label = (string)($c['libele'] ?? '');
+                                    $selected = ((string)$id === $category) ? 'selected' : '';
+                                ?>
+                                <option value="<?= $id ?>" <?= $selected ?>><?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <div class="col-12 col-md-2 d-grid align-self-end">
-                        <button class="btn btn-primary" type="button">
+                        <button class="btn btn-primary" type="submit">
                             <i class="bi bi-search me-2"></i>Rechercher
                         </button>
                     </div>
@@ -119,56 +130,58 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="text-muted small">Objets trouvés</div>
-        <div class="text-muted small">6 résultats (mock)</div>
+        <div class="text-muted small"><?= count($objets) ?> résultat(s)</div>
     </div>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        <?php
-            $objets = [
-                ['titre' => 'Casque audio', 'categorie' => 'Électronique', 'etat' => 'Bon état', 'desc' => 'Son propre, fonctionne parfaitement.'],
-                ['titre' => 'Vélo de ville', 'categorie' => 'Transport', 'etat' => 'Très bon état', 'desc' => 'Idéal pour les trajets quotidiens.'],
-                ['titre' => 'Lot de livres', 'categorie' => 'Livres', 'etat' => 'Comme neuf', 'desc' => 'Romans et classiques, bien conservés.'],
-                ['titre' => 'Veste hiver', 'categorie' => 'Vêtements', 'etat' => 'Neuf', 'desc' => 'Taille M, très chaude.'],
-                ['titre' => 'Console de jeux', 'categorie' => 'Électronique', 'etat' => 'Bon état', 'desc' => 'Console avec manette, prête à échanger.'],
-                ['titre' => 'Table basse', 'categorie' => 'Maison', 'etat' => 'Bon état', 'desc' => 'Bois massif, style moderne.'],
-            ];
-        ?>
+        <?php if (empty($objets)) : ?>
+            <div class="col-12">
+                <div class="alert alert-info mb-0" role="alert">
+                    Aucun objet trouvé.
+                </div>
+            </div>
+        <?php else : ?>
+            <?php foreach ($objets as $o) : ?>
+                <div class="col">
+                    <div class="card objet-card h-100">
+                        <?php if (!empty($o['image'])) : ?>
+                            <img class="card-img-top" src="/<?= htmlspecialchars((string)$o['image'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string)($o['titre'] ?? 'Objet'), ENT_QUOTES, 'UTF-8') ?>" style="height: 180px; object-fit: cover;">
+                        <?php else : ?>
+                            <div class="thumb"><i class="bi bi-image"></i></div>
+                        <?php endif; ?>
 
-        <?php foreach ($objets as $o) : ?>
-            <div class="col">
-                <div class="card objet-card h-100">
-                    <div class="thumb"><i class="bi bi-image"></i></div>
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
-                            <div>
-                                <h5 class="card-title mb-1"><?= htmlspecialchars((string)$o['titre'], ENT_QUOTES, 'UTF-8') ?></h5>
-                                <div class="text-muted small">
-                                    <i class="bi bi-shield-check me-1"></i><?= htmlspecialchars((string)$o['etat'], ENT_QUOTES, 'UTF-8') ?>
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                                <div>
+                                    <h5 class="card-title mb-1"><?= htmlspecialchars((string)($o['titre'] ?? ''), ENT_QUOTES, 'UTF-8') ?></h5>
+                                    <div class="text-muted small">
+                                        <i class="bi bi-cash-coin me-1"></i><?= number_format((float)($o['prix'] ?? 0), 2, '.', ' ') ?> Ar
+                                    </div>
                                 </div>
+                                <span class="badge text-bg-primary align-self-start"><?= htmlspecialchars((string)($o['categorie'] ?? ''), ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
-                            <span class="badge text-bg-primary align-self-start"><?= htmlspecialchars((string)$o['categorie'], ENT_QUOTES, 'UTF-8') ?></span>
-                        </div>
 
-                        <p class="card-text text-muted flex-grow-1 mb-3">
-                            <?= htmlspecialchars((string)$o['desc'], ENT_QUOTES, 'UTF-8') ?>
-                        </p>
+                            <p class="card-text text-muted flex-grow-1 mb-3">
+                                <?= htmlspecialchars((string)($o['description'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                            </p>
 
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary" type="button">
-                                <i class="bi bi-arrow-left-right me-2"></i>Proposer
-                            </button>
-                            <button class="btn btn-outline-secondary" type="button">
-                                <i class="bi bi-eye me-2"></i>Détails
-                            </button>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-outline-primary" href="/objet/<?= (int)($o['id'] ?? 0) ?>/propose">
+                                    <i class="bi bi-arrow-left-right me-2"></i>Proposer
+                                </a>
+                                <a class="btn btn-outline-secondary" href="/objet/detail/<?= (int)($o['id'] ?? 0) ?>">
+                                    <i class="bi bi-eye me-2"></i>Détails
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </div>
 
     <div class="text-center text-muted small mt-4">
-        Contenu template — aucune recherche DB n'est effectuée.
+        Résultats chargés depuis la base de données.
     </div>
 </div>
 

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Flight;
 use app\models\Objet;
 use app\models\Categorie;
+use app\models\User;
 
 class ObjetController
 {
@@ -79,7 +80,36 @@ class ObjetController
 
     public function showFind(): void
     {
-        Flight::render('user/objet/form_find');
+        $idUser = $this->ensureUserAuthenticated();
+        if ($idUser === null) {
+            return;
+        }
+
+        $motCle = (string)($_GET['keyword'] ?? '');
+        $idCateg = (string)($_GET['category'] ?? 'all');
+
+        try {
+            $categModel = new Categorie(Flight::db());
+            $categories = $categModel->getAll();
+        } catch (\Throwable $e) {
+            $categories = [];
+        }
+
+        try {
+            $objetModel = new Objet(Flight::db());
+            $objets = $objetModel->findObjet($motCle, $idCateg, $idUser);
+        } catch (\Throwable $e) {
+            $objets = [];
+        }
+
+        Flight::render('user/objet/form_find', [
+            'categories' => $categories,
+            'objets' => $objets,
+            'filters' => [
+                'keyword' => $motCle,
+                'category' => $idCateg,
+            ],
+        ]);
     }
 
     public function handleCreate(): void
@@ -302,6 +332,9 @@ class ObjetController
             }
 
             $images = $objetModel->getImagesByObjet($idObjet);
+
+            $userModel = new User(Flight::db());
+            $historique = $userModel->getAllHistoriqueObjet($idObjet);
         } catch (\Throwable $e) {
             $_SESSION['objet_error'] = 'Erreur lors du chargement de l\'objet.';
             Flight::redirect('/objet/explore');
@@ -311,6 +344,7 @@ class ObjetController
         Flight::render('user/objet/detail', [
             'objet' => $objet,
             'images' => $images,
+            'historique' => $historique ?? [],
         ]);
     }
 
