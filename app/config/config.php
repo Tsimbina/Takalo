@@ -65,11 +65,11 @@ return [
 	 **************************************/
 	'database' => [
 		// MySQL Example:
-		'host'     => 'localhost',      // Database host (e.g., 'localhost', 'db.example.com')
+		'host'     => '127.0.0.1',      // Database host (e.g., 'localhost', 'db.example.com')
 		'port'     => 3306,             // MySQL default port
 		'dbname'   => 'takalo_db',      // Database name (e.g., 'flightphp')
-		'user'     => 'root',           // Database user (e.g., 'root')
-		'password' => '',               // Database password (never commit real passwords)
+		'user'     => 'tomefy',           // Database user (e.g., 'root')
+		'password' => 'etu003948',               // Database password (never commit real passwords)
 
 		// SQLite Example:
 		// 'file_path' => __DIR__ . $ds . '..' . $ds . 'database.sqlite', // Path to SQLite file

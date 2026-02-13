@@ -6,3 +6,7 @@ public/data/
 
 #conf perso steeve
 .htaccess
+
+
+app/congig/config.php
+

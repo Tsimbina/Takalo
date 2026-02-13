@@ -10,6 +10,11 @@
 </head>
 <body>
 
+<?php
+    $stats = $stats ?? [];
+    $statsJson = json_encode($stats, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+?>
+
 <div class="container py-4 py-lg-5">
     <!-- Header -->
     <div class="d-flex align-items-center mb-4">
@@ -34,6 +39,10 @@
             <i class="bi bi-arrow-clockwise me-2"></i>Actualiser
         </button>
     </div>
+
+    <script>
+        window.__STATS__ = <?= $statsJson ?: '{}' ?>;
+    </script>
 
     <!-- Stats Cards -->
     <div class="row g-4 mb-4">

@@ -13,6 +13,17 @@ const mockData = {
     monthlyExchanges: [30, 45, 60, 55, 70, 85, 90, 100, 110, 120, 130, 140]
 };
 
+function getStatsSource() {
+    if (typeof window !== 'undefined' && window.__STATS__ && typeof window.__STATS__ === 'object') {
+        return {
+            ...mockData,
+            ...window.__STATS__,
+        };
+    }
+
+    return mockData;
+}
+
 // Configuration des mois
 const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 
@@ -43,13 +54,15 @@ function animateNumber(element, target, duration = 1500) {
 
 // Mise à jour des statistiques
 function updateStats() {
+    const data = getStatsSource();
+
     // Animation des cartes principales
-    animateNumber(document.getElementById('totalUsers'), mockData.totalUsers);
-    animateNumber(document.getElementById('totalExchanges'), mockData.totalExchanges);
+    animateNumber(document.getElementById('totalUsers'), data.totalUsers);
+    animateNumber(document.getElementById('totalExchanges'), data.totalExchanges);
     
     // Mise à jour des pourcentages
-    document.getElementById('usersGrowth').textContent = `+${mockData.usersGrowth}%`;
-    document.getElementById('exchangesGrowth').textContent = `+${mockData.exchangesGrowth}%`;
+    document.getElementById('usersGrowth').textContent = `+${data.usersGrowth}%`;
+    document.getElementById('exchangesGrowth').textContent = `+${data.exchangesGrowth}%`;
     
     // Animation des progress bars
     setTimeout(() => {
@@ -58,14 +71,15 @@ function updateStats() {
     }, 300);
     
     // Mini stats
-    animateNumber(document.getElementById('todayUsers'), mockData.todayUsers, 1000);
-    animateNumber(document.getElementById('pendingExchanges'), mockData.pendingExchanges, 1000);
-    animateNumber(document.getElementById('completedExchanges'), mockData.completedExchanges, 1000);
+    animateNumber(document.getElementById('todayUsers'), data.todayUsers, 1000);
+    animateNumber(document.getElementById('pendingExchanges'), data.pendingExchanges, 1000);
+    animateNumber(document.getElementById('completedExchanges'), data.completedExchanges, 1000);
 }
 
 // Création du graphique d'activité (barres)
 function createActivityChart() {
     const ctx = document.getElementById('activityChart').getContext('2d');
+    const data = getStatsSource();
     
     return new Chart(ctx, {
         type: 'bar',
@@ -74,7 +88,7 @@ function createActivityChart() {
             datasets: [
                 {
                     label: 'Nouveaux Utilisateurs',
-                    data: mockData.monthlyUsers,
+                    data: data.monthlyUsers,
                     backgroundColor: 'rgba(13, 110, 253, 0.8)',
                     borderColor: '#0d6efd',
                     borderWidth: 0,
@@ -83,7 +97,7 @@ function createActivityChart() {
                 },
                 {
                     label: 'Échanges Effectués',
-                    data: mockData.monthlyExchanges,
+                    data: data.monthlyExchanges,
                     backgroundColor: 'rgba(25, 135, 84, 0.8)',
                     borderColor: '#198754',
                     borderWidth: 0,
@@ -156,13 +170,17 @@ function createActivityChart() {
 // Création du graphique de répartition (doughnut)
 function createDistributionChart() {
     const ctx = document.getElementById('distributionChart').getContext('2d');
+    const data = getStatsSource();
+    const completed = Number.isFinite(data.completedExchanges) ? data.completedExchanges : 0;
+    const pending = Number.isFinite(data.pendingExchanges) ? data.pendingExchanges : 0;
+    const refused = Number.isFinite(data.refusedExchanges) ? data.refusedExchanges : 0;
     
     return new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Échanges Complétés', 'Échanges en Attente', 'Échanges Refusés'],
             datasets: [{
-                data: [342, 45, 12],
+                data: [completed, pending, refused],
                 backgroundColor: [
                     'rgba(25, 135, 84, 0.8)',   // Success
                     'rgba(255, 193, 7, 0.8)',   // Warning
@@ -215,7 +233,7 @@ function createDistributionChart() {
 async function fetchStatsData() {
     // Simuler un délai réseau
     await new Promise(resolve => setTimeout(resolve, 500));
-    return mockData;
+    return getStatsSource();
 }
 
 // Fonction de refresh

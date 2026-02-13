@@ -8,6 +8,7 @@ use app\controllers\CategorieController;
 use app\controllers\UserController;
 use app\controllers\ObjetController;
 use app\controllers\EchangeController;
+use app\controllers\StatistiqueController;
 
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
@@ -44,6 +45,7 @@ $router->post('/login', [UserController::class, 'handleLogin']);
 // Objets
 $router->get('/objet', [ObjetController::class, 'index']);
 $router->get('/objet/create', [ObjetController::class, 'showCreate']);
+$router->get('/objet/find', [ObjetController::class, 'showFind']);
 $router->post('/objet/create', [ObjetController::class, 'handleCreate']);
 $router->get('/objet/@id/edit', [ObjetController::class, 'showEdit']);
 $router->post('/objet/@id/edit', [ObjetController::class, 'handleEdit']);
@@ -56,6 +58,9 @@ $router->get('/objet/propositions', [ObjetController::class, 'showMyProposals'])
 
 // Echange (template)
 $router->get('/echange', [EchangeController::class, 'index']);
+
+// Statistique (admin)
+$router->get('/admin/statistique', [StatistiqueController::class, 'admin']);
 
 
 //$router->group('', function (Router $router) use ($app) {

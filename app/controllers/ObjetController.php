@@ -77,6 +77,11 @@ class ObjetController
         ]);
     }
 
+    public function showFind(): void
+    {
+        Flight::render('user/objet/form_find');
+    }
+
     public function handleCreate(): void
     {
         $idUser = $this->ensureUserAuthenticated();
