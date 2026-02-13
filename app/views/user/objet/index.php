@@ -88,6 +88,11 @@
                                     </span>
                                 </div>
 
+                                <div class="d-flex gap-2 mb-3">
+                                    <a class="btn btn-sm btn-outline-primary" href="#">+/-10%</a>
+                                    <a class="btn btn-sm btn-outline-primary" href="#">+/-20%</a>
+                                </div>
+
                                 <div class="d-grid gap-2">
                                     <a class="btn btn-outline-secondary" href="/objet/<?= (int)($objet['id'] ?? 0) ?>/edit"><i class="bi bi-pencil-square me-2"></i>Modifier</a>
                                     <form action="/objet/<?= (int)($objet['id'] ?? 0) ?>/delete" method="post" onsubmit="return confirm('Supprimer cet objet ?');">
