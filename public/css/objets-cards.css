@@ -1,0 +1,345 @@
+/* Styles pour la page des cartes d'objets - Compatible avec le style existant de Takalo */
+body {
+    background: linear-gradient(180deg, #f8f9fa, #ffffff);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 80px; /* Espace pour la navbar fixe */
+}
+
+.container-objets {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.header-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.header-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0d6efd;
+}
+
+.header-section p {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+.filtre-section {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.filtre-section h3 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.filtre-boutons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filtre-btn {
+    padding: 0.5rem 1.2rem;
+    border: 2px solid #0d6efd;
+    background: white;
+    color: #0d6efd;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.filtre-btn:hover,
+.filtre-btn.active {
+    background: #0d6efd;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+}
+
+.objets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.objet-card {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform .2s;
+    border: none;
+}
+
+.objet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.objet-image {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    position: relative;
+}
+
+.objet-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.objet-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.objet-content {
+    padding: 1.5rem;
+}
+
+.objet-titre {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.objet-description {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.objet-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid #f8f9fa;
+}
+
+.objet-prix {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.objet-prix span {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.btn-echanger {
+    background: #0d6efd;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-echanger:hover {
+    background: #0b5ed7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+}
+
+.btn-echanger i {
+    font-size: 1rem;
+}
+
+.loading-spinner {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+.loading-spinner.active {
+    display: block;
+}
+
+.spinner {
+    border: 3px solid rgba(13, 110, 253, 0.3);
+    border-top: 3px solid #0d6efd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.no-objets {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.no-objets i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.no-objets h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.no-objets p {
+    opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        padding-top: 70px;
+    }
+    
+    .container-objets {
+        padding: 1rem 0.5rem;
+    }
+    
+    .header-section h1 {
+        font-size: 2rem;
+    }
+    
+    .objets-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .filtre-boutons {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+    }
+    
+    .objet-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .btn-echanger {
+        justify-content: center;
+    }
+}
+
+/* Animation pour l'apparition des cartes */
+.objet-card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.objet-card:nth-child(1) { animation-delay: 0.1s; }
+.objet-card:nth-child(2) { animation-delay: 0.2s; }
+.objet-card:nth-child(3) { animation-delay: 0.3s; }
+.objet-card:nth-child(4) { animation-delay: 0.4s; }
+.objet-card:nth-child(5) { animation-delay: 0.5s; }
+.objet-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles pour les alertes Bootstrap personnalisés */
+.alert {
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.alert-danger {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* Styles pour la navigation */
+.navbar {
+    background: white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    color: #0d6efd !important;
+    font-weight: 700;
+}
+
+.nav-link {
+    color: #495057 !important;
+    font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #0d6efd !important;
+}
+
+/* Footer */
+footer {
+    background: white;
+    border-top: 1px solid #f8f9fa;
+    margin-top: 3rem;
+}
